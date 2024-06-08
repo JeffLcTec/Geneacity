@@ -50,4 +50,3 @@ def crear_partida(jugador: dict, puntos: int, pos: tuple):
 
     print(f"Partida guardada como 'partida de {jugador["name"]}'.")
 
-# Ejemplo de us
