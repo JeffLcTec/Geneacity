@@ -4,7 +4,7 @@
             "id": "4491",
             "name": "Daniela",
             "gender": "Female",
-            "age": "42",
+            "age": "45",
             "marital_status": "Married",
             "alive": "Alive",
             "father": "0",
@@ -13,7 +13,7 @@
         },
         "Puntuacion": 0,
         "Posicion": [
-            1450,
+            400,
             400
         ]
     }

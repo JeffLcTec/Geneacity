@@ -1,5 +1,6 @@
 import pygame
 import sys
+from PIL import *
 from utilidades import *
 from API_request import geneacity_API_request as API
 import random

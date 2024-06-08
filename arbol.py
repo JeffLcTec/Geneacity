@@ -1,6 +1,5 @@
 import tkinter as tk
-puntaje_max = 1000
-puntaje_actual = 0
+
 class Persona:
     def __init__(self, id, name):
         self.id = id
@@ -52,8 +51,9 @@ class ArbolGenealogico:
 
         for i, raiz in enumerate(raices):
             self.__ver_arbol(canvas, x_start + i * sibling_spacing, y_start, raiz, level_spacing, sibling_spacing, is_root=True)
-
+        canvas.create_text(200, 14, text="!!Cierra para ver el vinculo!!", font=("Helvetica", 12), fill="black")
         ventana.mainloop()
+       
 
     def __ver_arbol(self, canvas: tk.Canvas, x, y, nodo: Nodo, level_spacing, sibling_spacing, is_root=False) -> None:
         if nodo in self.nodos_dibujados:
@@ -103,7 +103,8 @@ class ArbolGenealogico:
 
         for i, raiz in enumerate(raices):
             self.__ver_arbol2(canvas, x_start + i * sibling_spacing, y_start, raiz, level_spacing, sibling_spacing, is_root=True)
-
+        label= tk.Label(ventana,text="Cierra para ver el vinculo!!!")
+        label.pack(padx=20, pady=20)
         ventana.mainloop()
     def __ver_arbol2(self, canvas: tk.Canvas, x, y, nodo: Nodo, level_spacing, sibling_spacing, is_root=False) -> None:
         # Dibuja el árbol recursivamente en el canvas
@@ -206,6 +207,27 @@ def determinar_vinculo(relacion_jugador, relacion_persona):
         return "Hijo/Hija"
     if relacion_jugador == "Ego" and relacion_persona == "Padre/Madre":
         return "Padre/Madre"
+    if relacion_jugador == "Abuelo/Abuela" and relacion_persona == "Ego":
+        return "Nieto/a"
+    if relacion_jugador == "Ego" and relacion_persona == "Abuelo/Abuela":
+        return "Abuelo/Abuela"
+    if relacion_jugador == "Bisabuelo/Bisabuela" and relacion_persona == "Ego":
+        return "Bisnieto/a"
+    if relacion_jugador == "Ego" and relacion_persona == "Bisabuelo/Bisabuela":
+        return "Bisabuelo/Bisabuela"
+    if relacion_jugador == "Tatarabuelo/Tatarabuela" and relacion_persona == "Ego":
+        return "Tataranieto/a"
+    if relacion_jugador == "Ego" and relacion_persona == "Tatarabuelo/Tatarabuela":
+        return "Tatarabuelo/Tatarabuela"
+    if relacion_jugador == "Trastatarabuelo/Trastatarabuela" and relacion_persona == "Ego":
+        return "Trastataranieto/a"
+    if relacion_jugador == "Ego" and relacion_persona == "Trastatarabuelo/Trastatarabuela":
+        return "Trastatarabuelo/Trastatarabuela"
+    if relacion_jugador == "Pentabuelo/Pentabuela" and relacion_persona == "Ego":
+        return "Pentanieto/a"
+    if relacion_jugador == "Ego" and relacion_persona == "Pentabuelo/Pentabuela":
+        return "Pentabuelo/Pentabuela"
+
     if relacion_jugador == "Padre/Madre" and relacion_persona == "Padre/Madre":
         return "Hermano/a"
     if relacion_jugador == "Abuelo/Abuela" and relacion_persona == "Abuelo/Abuela":
@@ -229,29 +251,112 @@ def determinar_vinculo(relacion_jugador, relacion_persona):
     if relacion_jugador == "Trastatarabuelo/Trastatarabuela" and relacion_persona == "Trastatarabuelo/Trastatarabuela":
         return "Primo/a cuarto"
     if relacion_jugador == "Padre/Madre" and relacion_persona == "Trastatarabuelo/Trastatarabuela":
-        return "Trastataratío/Trastataratía"
+        return "Trastataratío/Tataratío/Tataratía/Tía-Trastatarabuelo/Trastatarabuela"
     if relacion_jugador == "Trastatarabuelo/Trastatarabuela" and relacion_persona == "Padre/Madre":
-        return "Trastatarasobrino/Trastatarasobrina"
-    # Agregar más reglas según sea necesario
+        return "Trastatarasobrino/Tatarasobrino"
+    if relacion_jugador == "Pentabuelo/Pentabuela" and relacion_persona == "Pentabuelo/Pentabuela":
+        return "Primo/a quinto"
+    if relacion_jugador == "Padre/Madre" and relacion_persona == "Pentabuelo/Pentabuela":
+        return "Pentatío/Pentatía"
+    if relacion_jugador == "Pentabuelo/Pentabuela" and relacion_persona == "Padre/Madre":
+        return "Pentasobrino/Pentasobrina"
+    if relacion_jugador == "Abuelo/Abuela" and relacion_persona == "Sobrino/a":
+        return "Sobrino/a tercero"
+    if relacion_jugador == "Padre/Madre" and relacion_persona == "Bisabuelo/Bisabuela":
+        return "Tío/a tercero"
     return "Relación lejana"
 
 
 
 def buscar_similitud(jugador, persona, arbol1, arbol2):
+    puntaje_actual = 0
     ancestros_jugador = arbol1.obtener_ancestros_con_distancia(jugador["id"])
     ancestros_persona = arbol2.obtener_ancestros_con_distancia(persona["id"])
-    ancestros_comunes=[]
-    while len(ancestros_comunes)<3:
-        for ancestro_id in ancestros_jugador.keys():
-            if ancestro_id in ancestros_persona:
-                    ancestros_comunes.append(determinar_vinculo(ancestros_jugador[ancestro_id][2], ancestros_persona[ancestro_id][2]))
-                    ancestros_comunes.append(determinar_vinculo(ancestros_persona[ancestro_id][2],ancestros_jugador[ancestro_id][2]))
+    
+    # Utilizar conjuntos para encontrar ancestros comunes
+    ancestros_comunes_ids = set(ancestros_jugador.keys()).intersection(ancestros_persona.keys())
+    
+    ancestros_comunes = []
+    for ancestro_id in ancestros_comunes_ids:
+        vinculo_jugador = determinar_vinculo(ancestros_jugador[ancestro_id][2], ancestros_persona[ancestro_id][2])
+        vinculo_persona = determinar_vinculo(ancestros_persona[ancestro_id][2], ancestros_jugador[ancestro_id][2])
+        ancestros_comunes.append((vinculo_jugador, vinculo_persona))
+
+        # Limitar el número de ancestros comunes a 3
+        if len(ancestros_comunes) ==2:
+            break
+
+    # Determinar el puntaje y la relación basada en el primer ancestro común encontrado
     if ancestros_comunes:
+        vinculo_jugador, vinculo_persona = ancestros_comunes[0]
+
+        if vinculo_persona == "Padre/Madre":
+            puntaje_actual += 5
+        elif vinculo_persona == "Hijo/Hija":
+            puntaje_actual += 5
+        elif vinculo_persona == "Hermano/a":
+            puntaje_actual += 10
+        elif vinculo_persona == "Nieto/a":
+            puntaje_actual += 10
+        elif vinculo_persona == "Abuelo/Abuela":
+            puntaje_actual += 10
+        elif vinculo_persona == "Bisabuelo/Bisabuela":
+            puntaje_actual += 15
+        elif vinculo_persona == "Bisnieto/a":
+            puntaje_actual += 15
+        elif vinculo_persona == "Tío/Tía":
+            puntaje_actual += 15
+        elif vinculo_persona == "Sobrino/a":
+            puntaje_actual += 15
+        elif vinculo_persona == "Primo/a":
+            puntaje_actual += 20
+        elif vinculo_persona == "Tío abuelo/Tía abuela":
+            puntaje_actual += 20
+        elif vinculo_persona == "Sobrino nieto/Sobrina nieta":
+            puntaje_actual += 20
+        elif vinculo_persona == "Tatarabuelo/Tatarabuela":
+            puntaje_actual += 20
+        elif vinculo_persona == "Tataranieto/a":
+            puntaje_actual += 20
+        elif vinculo_persona == "Primo/a segundo":
+            puntaje_actual += 25
+        elif vinculo_persona == "Tío bisabuelo/Tía bisabuela":
+            puntaje_actual += 25
+        elif vinculo_persona == "Sobrino bisnieto/Sobrina bisnieta":
+            puntaje_actual += 25
+        elif vinculo_persona == "Trastatarabuelo/Trastatarabuela":
+            puntaje_actual += 25
+        elif vinculo_persona == "Trastataranieto/a":
+            puntaje_actual += 25
+        elif vinculo_persona == "Primo/a tercero":
+            puntaje_actual += 30
+        elif vinculo_persona == "Tío tatarabuelo/Tía tatarabuela":
+            puntaje_actual += 30
+        elif vinculo_persona == "Sobrino tataranieto/Sobrina tataranieta":
+            puntaje_actual += 30
+        elif vinculo_persona == "Pentabuelo/Pentabuela":
+            puntaje_actual += 30
+        elif vinculo_persona == "Pentanieto/a":
+            puntaje_actual += 30
+        elif vinculo_persona == "Tío/a tercero":
+            puntaje_actual += 30
+        elif vinculo_persona == "Sobrino/a tercero":
+            puntaje_actual += 30
+        else:
+            pass
+
         print("Ancestros comunes encontrados:")
-        print(f"Eres el {ancestros_comunes[0]} de esta persona!!")
-        print(f"Esta persona es tu {ancestros_comunes[1]}!!")
+        print(f"Eres el {vinculo_jugador} de esta persona!!")
+        print(f"Esta persona es tu {vinculo_persona}!!")
+        print(puntaje_actual)
+        tupla = (puntaje_actual, f"Es tu {vinculo_persona}")
     else:
         print("No se encontraron ancestros comunes.")
+        tupla = (puntaje_actual, "No tiene ningun vinculo.")
+    
+    return tupla
+
+
 
 
 

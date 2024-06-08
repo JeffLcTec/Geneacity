@@ -1,6 +1,6 @@
-import pygame
+import pygame,os
 from arbol import *
-
+from PIL import Image
 jsons=[] #lista que almacena los jsons de la consulta del API
 habitantes=[]
 contadores = {'s': 1, 'w': 1, 'a': 1, 'd': 1} #Contadores usados para determinar la dirección y cual sprite colocar 
@@ -41,6 +41,7 @@ for i in range(0, fondo.get_width(), tile_size):
 j_info_open=False
 window_open= False
 persona_info_open = False
+ventana_parentezco= False
 esc_press=False
 lockW=True
 lockA=True
@@ -49,5 +50,25 @@ lockD=True
 
 cont_casas=0
 three_persona=ArbolGenealogico()
-puntaje_max=1000
+
 puntaje_actual=0
+def load_gif_frames(gif_path):
+    # Cargar el GIF y obtener sus frames
+    gif = Image.open(gif_path)
+    frames = []
+    try:
+        while True:
+            frame = gif.copy()
+            frame = frame.convert("RGBA") 
+            frame = frame.resize((100,100),Image.LANCZOS) 
+            frames.append(pygame.image.fromstring(frame.tobytes(), frame.size, frame.mode))
+            gif.seek(gif.tell() + 1)
+    except EOFError:
+        pass
+    return frames
+gif_path = 'imagenes_Proyecto3/guardado.gif'  # Cambia esto a la ruta de tu GIF
+frames = load_gif_frames(gif_path)
+frame_count = len(frames)
+frame_actual = 0
+animation_speed = 0.07
+current_frame = 0

@@ -6,7 +6,8 @@ from arbol import *
 def buscar_parentezco(jugador,persona):
     arbol_p= arbol_persona(persona)
     arbol_jugador= ver_familia(jugador,Ver=False)
-    buscar_similitud(jugador,persona,arbol_jugador,arbol_p)
+    puntuacion= buscar_similitud(jugador,persona,arbol_jugador,arbol_p)
+    return puntuacion
 def arbol_persona(persona):
     three_persona.agregar_nodo(Persona(persona["id"],persona["name"]))
     if persona["father"] and persona["mother"]:
@@ -129,10 +130,12 @@ def request_casas(lista, jx, jy):
 pygame.init()
 def game(jugador):
     global three
-    time =0
+    tiempo =0
+    from PIL import Image
     from arbol import ArbolGenealogico,Persona,Nodo
-    from utilidades import j_info_open,jsons, habitantes, contadores, sprites, skins, size, screen, image, image_rect, casa_img, x, y, jugadorx, jugadory, clock, speed, fondo, tile_size, tiles, window_open, persona_info_open, esc_press, lockW, lockA, lockS, lockD, cont_casas
+    from utilidades import current_frame,frame_count,frame_actual,frames,ventana_parentezco,puntaje_actual, j_info_open,jsons, habitantes, contadores, sprites, skins, size, screen, image, image_rect, casa_img, x, y, jugadorx, jugadory, clock, speed, fondo, tile_size, tiles, window_open, persona_info_open, esc_press, lockW, lockA, lockS, lockD, cont_casas
     from guardar_partidas import guardar_partida, crear_partida
+    import time
     jugador=info_persona(jugador["id"])
     while True:
     
@@ -223,8 +226,10 @@ def game(jugador):
                 elif persona_info_open:
                     if arbol_p.collidepoint(event.pos):
                         ver_familia(persona_seleccionada,Ver=True) 
-                        buscar_parentezco(jugador,persona_seleccionada)
-                        
+                        retorno= buscar_parentezco(jugador,persona_seleccionada)
+                        puntaje_actual+=retorno[0]
+                        parentezco=retorno[1]
+                        ventana_parentezco=True 
                         pass
                     if event.type == pygame.KEYDOWN and event.key == pygame.K_BACKSPACE:
                         person_info_open = False
@@ -374,6 +379,18 @@ def game(jugador):
                 pygame.draw.rect(screen, (0,0,0), hijo)
                 text = font.render("reproducirse", True, (255,255,255))
                 screen.blit(text,(102,2))
+        if ventana_parentezco==True:
+            while tiempo<=4000:
+                tiempo+=1
+                resultado = pygame.Rect(170, 553, 470, 50)
+                pygame.draw.rect(screen, (94, 76, 72), resultado)
+                font = pygame.font.Font(None, 36)
+                text = font.render(f"Esta persona {parentezco}!!", True, (255,255,255))
+                screen.blit(text,resultado.topleft)
+                pygame.display.update()
+                
+            tiempo=0
+            ventana_parentezco=False
        
         ventana_j=pygame.Rect(0,0,100,100)
         pygame.draw.rect(screen, (0, 0, 0), ventana_j)
@@ -383,17 +400,34 @@ def game(jugador):
         font = pygame.font.Font(None, 36)
         text = font.render(f"{jugadorx},{jugadory}", True, (255,255,255))
         screen.blit(text,posicionJ.topleft)    
-        ajustes=pygame.Rect(750,0,100,100)
-        pygame.draw.rect(screen, (0, 0, 0), ajustes)
-        screen.blit(pygame.transform.scale(pygame.image.load("imagenes_Proyecto3/ajustes.png").convert_alpha(),(100,100)),(700,0)) 
-        
-        screen.blit(text,posicionJ.topleft)    
+        #screen.blit(pygame.transform.scale(pygame.image.load("imagenes_Proyecto3/guardado.png").convert_alpha(),(100,100)),(700,0)) 
+        puntuacion=pygame.Rect(350,0,100,20)
+        pygame.draw.rect(screen, (0, 0, 0), puntuacion)
+        font = pygame.font.Font(None, 36)
+        text = font.render(f"{puntaje_actual}", True, (255,255,255))
+        screen.blit(text,puntuacion.topleft)        
         if not window_open:
             speed=25
-        if time==700:
-            time=0
+        if tiempo==700:
+            tiempo=0
+            while current_frame<frame_count:
+                
+
+                # Limpiar la ventana
+                  # Fondo blanco
+
+                # Actualizar la imagen de la animación
+                screen.blit((frames[int(current_frame)]), (700, 0))  # Ajusta la posición según sea necesario
+
+                # Actualizar el frame actual
+                current_frame += animation_speed
+                
+
+                # Actualizar la ventana
+                pygame.display.update()
+            current_frame=0
             crear_partida(jugador,puntaje_actual,(jugadorx,jugadory))
 
-        time+=1
+        tiempo+=1
         pygame.display.update()
         clock.tick(40)  
