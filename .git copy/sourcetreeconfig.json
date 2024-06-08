@@ -1,0 +1,33 @@
+{
+  "$id": "19",
+  "AutoRefresh": true,
+  "AutoRefreshRemotes": true,
+  "CommitTextLinks": null,
+  "DraftCommitMsg": "",
+  "IncomingSavedCount": 0,
+  "LastCheckedRemotes": "2024-06-07T19:44:13.265964-06:00",
+  "LastUsedView": 1,
+  "LogBranchFilterIndex": 0,
+  "OutgoingSavedCount": 1,
+  "SidebarExpandedItems": [
+    "Branches"
+  ],
+  "SidebarWidth": 210.0,
+  "SubtreeLinks": [],
+  "NeedsLargeFilesPull": false,
+  "RemoteProjectLinks": [
+    {
+      "$id": "20",
+      "BaseUrl": "https://www.github.com",
+      "Identifier": "RChacon05/Geneacity",
+      "RemoteName": "Geneacity",
+      "Type": 0,
+      "Username": "JeffLC10",
+      "CloneUrl": null,
+      "ProjectUrl": null,
+      "AccountId": null,
+      "AvatarUrl": null,
+      "DisplayName": "Geneacity: https://www.github.com"
+    }
+  ]
+}
