@@ -1,7 +1,7 @@
 import tkinter as tk
 from PIL import Image, ImageTk
 import sys
-from prueba import nueva_partida, cargar_partida
+import prueba 
 
 def cerrar_juego():
     """En caso de cerrar la ventana, se ejecutará esta función para cerrar el programa.
@@ -9,6 +9,7 @@ def cerrar_juego():
     sys.exit()
 
 def menu_inicio():
+    
     def resize_image(image_path, width, height):
         try:
             image = Image.open(image_path)
@@ -52,8 +53,8 @@ def menu_inicio():
     }
 
     # Crear botones con estilo futurista
-    btn_nueva_partida = tk.Button(root, text="Partida nueva", **btn_style, command=lambda: nueva_partida(root))
-    btn_cargar_partida = tk.Button(root, text="Cargar partida", **btn_style, command=cargar_partida())
+    btn_nueva_partida = tk.Button(root, text="Partida nueva", **btn_style, command=lambda: prueba.nueva_partida(root))
+    btn_cargar_partida = tk.Button(root, text="Cargar partida", **btn_style, command=prueba.cargar_partida())
 
     # Colocar los botones en el centro de la ventana
     canvas.create_window(600, 400, window=btn_nueva_partida)

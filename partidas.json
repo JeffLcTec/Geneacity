@@ -4,12 +4,138 @@
             "id": "4491",
             "name": "Daniela",
             "gender": "Female",
-            "age": "45",
+            "age": "51",
             "marital_status": "Married",
             "alive": "Alive",
             "father": "0",
             "mother": "1",
             "house": "4077"
+        },
+        "Puntuacion": 0,
+        "Posicion": [
+            400,
+            400
+        ]
+    },
+    "partida de Mia": {
+        "jugador": {
+            "id": "4916",
+            "name": "Mia",
+            "gender": "Female",
+            "age": "48",
+            "marital_status": "Single",
+            "alive": "Alive",
+            "father": "0",
+            "mother": "1",
+            "house": "1231"
+        },
+        "Puntuacion": 0,
+        "Posicion": [
+            375,
+            300
+        ]
+    },
+    "partida de Amira": {
+        "jugador": {
+            "id": "5406",
+            "name": "Amira",
+            "gender": "Female",
+            "age": "49",
+            "marital_status": "Single",
+            "alive": "Alive",
+            "father": "0",
+            "mother": "1",
+            "house": "1890"
+        },
+        "Puntuacion": 0,
+        "Posicion": [
+            400,
+            400
+        ]
+    },
+    "partida de Mateo": {
+        "jugador": {
+            "id": "6462",
+            "name": "Mateo",
+            "gender": "Male",
+            "age": "40",
+            "marital_status": "Single",
+            "alive": "Alive",
+            "father": "0",
+            "mother": "1",
+            "house": "3345"
+        },
+        "Puntuacion": 0,
+        "Posicion": [
+            400,
+            1225
+        ]
+    },
+    "partida de Kayla": {
+        "jugador": {
+            "id": "6937",
+            "name": "Kayla",
+            "gender": "Female",
+            "age": "44",
+            "marital_status": "Single",
+            "alive": "Alive",
+            "father": "0",
+            "mother": "1",
+            "house": "4007"
+        },
+        "Puntuacion": 0,
+        "Posicion": [
+            475,
+            425
+        ]
+    },
+    "partida de Abby": {
+        "jugador": {
+            "id": "4086",
+            "name": "Abby",
+            "gender": "Female",
+            "age": "49",
+            "marital_status": "Single",
+            "alive": "Alive",
+            "father": "0",
+            "mother": "1",
+            "house": "78"
+        },
+        "Puntuacion": 0,
+        "Posicion": [
+            1700,
+            1675
+        ]
+    },
+    "partida de Lola": {
+        "jugador": {
+            "id": "6093",
+            "name": "Lola",
+            "gender": "Female",
+            "age": "41",
+            "marital_status": "Married",
+            "alive": "Alive",
+            "father": "0",
+            "mother": "1",
+            "house": "4117"
+        },
+        "Puntuacion": 0,
+        "Posicion": [
+            1525,
+            1350
+        ]
+    },
+    "partida de Berenjena": {
+        "jugador": {
+            "id": "7076",
+            "name": "Berenjena",
+            "gender": "Female",
+            "age": "27",
+            "marital_status": "Married",
+            "alive": "Alive",
+            "father": "4178",
+            "mother": "7066",
+            "house": "4118"
         },
         "Puntuacion": 0,
         "Posicion": [

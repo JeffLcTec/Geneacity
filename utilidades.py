@@ -50,6 +50,7 @@ lockD=True
 
 cont_casas=0
 three_persona=ArbolGenealogico()
+three=ArbolGenealogico()
 
 puntaje_actual=0
 def load_gif_frames(gif_path):

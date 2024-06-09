@@ -28,7 +28,7 @@ def seleccionar_personaje():
 
     # Bucle principal del juego
     def personas_disponibles():
-        disponibles = geneacity_API_request("https://geneacity.life/API/getAvailableInhabitants/?x=60000&y=60000")
+        disponibles = geneacity_API_request("https://geneacity.life/API/getAvailableInhabitants/?x=70000&y=70000")
         return disponibles.json
 
     personajes_disponibles = personas_disponibles()
@@ -57,8 +57,8 @@ def seleccionar_personaje():
             ventana_y += 150  # Incrementa más para dejar espacio para el texto
 
     def handle_character_click(character_name): 
-        """jugador = API(f"https://geneacity.life/API/selectAvailableInhabitant/?id={'4491'}")"""
-        game({'id': '4491', 'name': 'Daniela', 'gender': 'Female', 'age': '28'})# Aquí puedes llamar a la función que quieras para el personaje clickeado
+        jugador = geneacity_API_request(f"https://geneacity.life/API/selectAvailableInhabitant/?id=7076")
+        game({'id': '7076', 'name': 'Berenjena', 'gender': 'Female', 'age': '26', 'marital_status': 'Single', 'alive': 'Alive', 'father': '4178', 'mother': '7066', 'house': '4112'})# Aquí puedes llamar a la función que quieras para el personaje clickeado
 
     while True:
         for event in pygame.event.get():
@@ -87,8 +87,8 @@ def seleccionar_personaje():
         pygame.display.flip()
 
 def buscar_parentezco(jugador,persona):
+    arbol_jugador=arbol_persona(jugador)
     arbol_p= arbol_persona(persona)
-    arbol_jugador= ver_familia(jugador,Ver=False)
     puntuacion= buscar_similitud(jugador,persona,arbol_jugador,arbol_p)
     return puntuacion
 def arbol_persona(persona):
@@ -108,7 +108,7 @@ def arbol_persona(persona):
     return three_persona
     
 def ver_familia(jugador,Ver):
-    three=ArbolGenealogico()
+    from utilidades import three
     three.agregar_nodo(Persona(jugador["id"],jugador["name"]))
     if jugador["father"] and jugador["mother"]:
         padre=info_persona(info_persona(jugador["id"])["father"])
@@ -116,8 +116,6 @@ def ver_familia(jugador,Ver):
         familiares=[three.agregar_nodo(Persona(padre["id"], padre["name"])),three.agregar_nodo(Persona(madre["id"], madre["name"]))]
         three.establecer_padre(jugador["id"],padre["id"])
         three.establecer_madre(jugador["id"],madre["id"])
-        ver_familia(padre,Ver=False)
-        ver_familia(madre,Ver=False)
         
     if Ver==True:
         ventana = tk.Tk()
@@ -126,7 +124,7 @@ def ver_familia(jugador,Ver):
         canvas = tk.Canvas(ventana, width=800, height=600, bg="white")
         canvas.pack()
         three.ver_arbol(canvas, ventana)
-    return three
+        ventana.mainloop()
  
 def imagen(contadores, imagen, direccion):
     """Función encargada de mover y generar la animación de movimiento del personaje
@@ -170,13 +168,20 @@ def Info_casas(lista,x,y):
                 except KeyError:
                     return []
 def matricidio(jugador, pareja):
-    x= random.randint(20,100)
-    y= random.randint(20,100)
-    geneacity_API_request(f"https://geneacity.life/API/createInhabitantUnion/?idInhabitant1={jugador["id"]}&idInhabitant2={pareja["id"]}&newHouseXPostition=200&newHouseYPostition=200")
+    x= random.randint(20,9500)
+    y= random.randint(20,9500)
+    geneacity_API_request(f"https://geneacity.life/API/createInhabitantUnion/?idInhabitant1={jugador["id"]}&idInhabitant2={pareja["id"]}&newHouseXPostition={x}&newHouseYPostition={y}")
     print(f"Felicidades, te has casado, tu nueva vivienda está en ({x},{y})")
-def reproduccion(jugador):
-    #geneacity_API_request(f"https://geneacity.life/API/createChildren/?name=Jeffsito&idInhabitant={jugador["id"]}&gender=Male&age=20")
-    print(f"Felicidades, acabas de tener un/una hijo/a bien bonito/a")
+def reproduccion(jugador,nombre,root,three):
+        child = geneacity_API_request(f"https://geneacity.life/API/createChildren/?name={nombre}&idInhabitant={jugador["id"]}&gender=Male&age=20")
+        child= child.json["childId"]["id"]
+        print(f"Felicidades, acabas de tener un/una hijo/a bien bonito/a llamado {nombre}")
+        child = info_persona(child)
+        three.agregar_nodo(Persona(child["id"], child["name"]))
+        three.establecer_padre(child["id"],child["father"])
+        three.establecer_madre(child["id"],child["mother"])
+        root.destroy()
+        return three
 
 def request_casas(lista, jx, jy):
     """Función optimizada para realizar las consultas de casas al API, evitando duplicados.
@@ -219,8 +224,16 @@ def game(jugador):
     tiempo =0
     jugador=info_persona(jugador["id"])
     pygame.init()
+    from utilidades import three
+    three.agregar_nodo(Persona(jugador["id"],jugador["name"]))
+    if jugador["father"] and jugador["mother"]:
+        padre=info_persona(info_persona(jugador["id"])["father"])
+        madre=info_persona(info_persona(jugador["id"])["mother"])
+        familiares=[three.agregar_nodo(Persona(padre["id"], padre["name"])),three.agregar_nodo(Persona(madre["id"], madre["name"]))]
+        three.establecer_padre(jugador["id"],padre["id"])
+        three.establecer_madre(jugador["id"],madre["id"])
     while True:
-    
+        
         screen.fill([48, 126, 201])
 
         # Dibuja solo los mosaicos visibles
@@ -274,11 +287,29 @@ def game(jugador):
                 if ventana_j.collidepoint(event.pos):
                     jinfo=info_persona(jugador["id"])
                     j_info_open=True
-                if hijo.collidepoint(event.pos):
-                    reproduccion(jugador)
-                 
-            
-                         
+                try:
+                    if hijo.collidepoint(event.pos):
+                        root = tk.Tk()
+                        root.title("Entrada de Texto")
+                        root.geometry("400x300")
+                        label_prompt = tk.Label(root, text="Ingresa un nombre", font=("Helvetica", 14))
+                        label_prompt.pack(pady=20)
+
+                        # Crear y configurar el campo de entrada (Entry)
+                        entry = tk.Entry(root, font=("Helvetica", 14))
+                        entry.pack(pady=20)
+                        # Crear un botón para mostrar el valor del campo de entrada
+                        button = tk.Button(root, text="Confirmar", command=lambda: reproduccion(jugador, entry.get(),root,three))
+                        button.pack(pady=10)
+
+                        # Crear una etiqueta para mostrar el texto ingresado
+                        label = tk.Label(root, text="", font=("Helvetica", 14))
+                        label.pack(pady=20)
+
+                        # Ejecutar el bucle principal de la aplicación
+                        root.mainloop()
+                except:
+                    pass
                 if not window_open and not persona_info_open:
                     
                 
@@ -307,7 +338,6 @@ def game(jugador):
                                 persona_info_open=True
                 elif persona_info_open:
                     if arbol_p.collidepoint(event.pos):
-                        ver_familia(persona_seleccionada,Ver=True) 
                         retorno= buscar_parentezco(jugador,persona_seleccionada)
                         puntaje_actual+=retorno[0]
                         parentezco=retorno[1]
@@ -409,8 +439,6 @@ def game(jugador):
             speed=0    
             ventana_x=150
             ventana_y=300
-            window_rect = pygame.Rect(ventana_x-40, ventana_y+50, 500, 600)
-            pygame.draw.rect(screen, (255, 255, 255), window_rect)
             screen.blit(pygame.transform.scale(pygame.image.load("imagenes_Proyecto3/agenda.png").convert_alpha(),(600,600)),(80,100)) 
             font = pygame.font.Font(None, 36)
             # Información de la persona seleccionada
@@ -426,8 +454,8 @@ def game(jugador):
                 screen.blit(text, (ventana_x+10, ventana_y+10 + i * 50))
             arbol_p=pygame.Rect(300,500,200,50)
             pygame.draw.rect(screen,  (94, 76, 72), arbol_p)
-            text = font.render("Ver Arbol", True, (255,255,255))
-            screen.blit(text,(343,510))
+            text = font.render("Ver Similitud", True, (255,255,255))
+            screen.blit(text,(325,513))
             if persona_seleccionada["marital_status"]=="Single" and jugador["marital_status"]=="Single" and not persona_seleccionada["gender"]==jugador["gender"] and not jugador["id"]==persona_seleccionada["id"] and int(jugador["age"])>25 and int(persona_seleccionada["age"])>25:
                 casarse = pygame.Rect(300, 570, 200, 50)
                 pygame.draw.rect(screen, (94, 76, 72), casarse)
@@ -459,39 +487,51 @@ def game(jugador):
                 hijo=pygame.Rect(100,0,150,30)
                 font = pygame.font.Font(None, 36)
                 pygame.draw.rect(screen, (0,0,0), hijo)
+                screen.blit(pygame.transform.scale(pygame.image.load("imagenes_Proyecto3/marco.png").convert_alpha(),(152,40)),hijo.topleft) 
                 text = font.render("reproducirse", True, (255,255,255))
                 screen.blit(text,(102,2))
+        
         if ventana_parentezco==True:
-            while tiempo<=4000:
-                tiempo+=1
-                resultado = pygame.Rect(170, 553, 470, 50)
-                pygame.draw.rect(screen, (94, 76, 72), resultado)
-                font = pygame.font.Font(None, 36)
-                text = font.render(f"Esta persona {parentezco}!!", True, (255,255,255))
-                screen.blit(text,resultado.topleft)
-                pygame.display.update()
-                
-            tiempo=0
-            ventana_parentezco=False
+                while tiempo<=4000:
+                    tiempo+=1
+                    resultado = pygame.Rect(170, 553, 470, 50)
+                    pygame.draw.rect(screen, (94, 76, 72), resultado)
+                    font = pygame.font.Font(None, 36)
+                    text = font.render(f"Esta persona {parentezco}!!", True, (255,255,255))
+                    screen.blit(text,(195,566))
+                    pygame.display.update()
+                tiempo=0
+                ventana_parentezco=False        
+            
        
         ventana_j=pygame.Rect(0,0,100,100)
-        pygame.draw.rect(screen, (0, 0, 0), ventana_j)
-        screen.blit(pygame.transform.scale(image, (100, 100)),ventana_j.topleft)    
+        screen.blit(pygame.transform.scale(pygame.image.load("imagenes_Proyecto3/cuadrado.png").convert_alpha(),(100,100)),ventana_j.topleft) 
+        screen.blit(pygame.transform.scale(image, (80, 80)),(11,10))    
         posicionJ=pygame.Rect(0,100,100,20)
-        pygame.draw.rect(screen, (0, 0, 0), posicionJ)
-        font = pygame.font.Font(None, 36)
-        text = font.render(f"{jugadorx},{jugadory}", True, (255,255,255))
-        screen.blit(text,posicionJ.topleft)    
+        screen.blit(pygame.transform.scale(pygame.image.load("imagenes_Proyecto3/marco.png").convert_alpha(),(102,30)),posicionJ.topleft) 
+        if jugadorx>9999 or jugadory>9999:
+            font = pygame.font.Font(None, 25)
+            text = font.render(f"{jugadorx},{jugadory}", True, (0,0,0))
+            screen.blit(text,(2,105)) 
+        elif jugadorx>999 or jugadory>999:
+                    font = pygame.font.Font(None, 30)
+                    text = font.render(f"{jugadorx},{jugadory}", True, (0,0,0))
+                    screen.blit(text,(2,105)) 
+        else:
+            font = pygame.font.Font(None, 35)
+            text = font.render(f"{jugadorx},{jugadory}", True, (0,0,0))
+            screen.blit(text,(2,105))    
         #screen.blit(pygame.transform.scale(pygame.image.load("imagenes_Proyecto3/guardado.png").convert_alpha(),(100,100)),(700,0)) 
         puntuacion=pygame.Rect(350,0,100,20)
-        pygame.draw.rect(screen, (0, 0, 0), puntuacion)
+        screen.blit(pygame.transform.scale(pygame.image.load("imagenes_Proyecto3/marco.png").convert_alpha(),(102,30)),puntuacion.topleft) 
         font = pygame.font.Font(None, 36)
-        text = font.render(f"{puntaje_actual}", True, (255,255,255))
-        screen.blit(text,puntuacion.topleft)        
+        text = font.render(f"{puntaje_actual}", True, (0,0,0))
+        screen.blit(text,(390,0))        
         if not window_open:
             speed=25
         if tiempo==700:
             tiempo=0
+            jugador=info_persona(jugador["id"])
             while current_frame<frame_count:
                 
 
