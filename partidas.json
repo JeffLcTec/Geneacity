@@ -1,146 +1,188 @@
 {
-    "partida de Daniela": {
-        "jugador": {
-            "id": "4491",
-            "name": "Daniela",
-            "gender": "Female",
-            "age": "51",
-            "marital_status": "Married",
-            "alive": "Alive",
-            "father": "0",
-            "mother": "1",
-            "house": "4077"
-        },
-        "Puntuacion": 0,
-        "Posicion": [
-            400,
-            400
-        ]
-    },
-    "partida de Mia": {
-        "jugador": {
-            "id": "4916",
-            "name": "Mia",
-            "gender": "Female",
-            "age": "48",
-            "marital_status": "Single",
-            "alive": "Alive",
-            "father": "0",
-            "mother": "1",
-            "house": "1231"
-        },
-        "Puntuacion": 0,
-        "Posicion": [
-            375,
-            300
-        ]
-    },
-    "partida de Amira": {
-        "jugador": {
-            "id": "5406",
-            "name": "Amira",
-            "gender": "Female",
-            "age": "49",
-            "marital_status": "Single",
-            "alive": "Alive",
-            "father": "0",
-            "mother": "1",
-            "house": "1890"
-        },
-        "Puntuacion": 0,
-        "Posicion": [
-            400,
-            400
-        ]
-    },
-    "partida de Mateo": {
-        "jugador": {
-            "id": "6462",
-            "name": "Mateo",
-            "gender": "Male",
-            "age": "40",
-            "marital_status": "Single",
-            "alive": "Alive",
-            "father": "0",
-            "mother": "1",
-            "house": "3345"
-        },
-        "Puntuacion": 0,
-        "Posicion": [
-            400,
-            1225
-        ]
-    },
-    "partida de Kayla": {
-        "jugador": {
-            "id": "6937",
-            "name": "Kayla",
-            "gender": "Female",
-            "age": "44",
-            "marital_status": "Single",
-            "alive": "Alive",
-            "father": "0",
-            "mother": "1",
-            "house": "4007"
-        },
-        "Puntuacion": 0,
-        "Posicion": [
-            475,
-            425
-        ]
-    },
-    "partida de Abby": {
-        "jugador": {
-            "id": "4086",
-            "name": "Abby",
-            "gender": "Female",
-            "age": "49",
-            "marital_status": "Single",
-            "alive": "Alive",
-            "father": "0",
-            "mother": "1",
-            "house": "78"
-        },
-        "Puntuacion": 0,
-        "Posicion": [
-            1700,
-            1675
-        ]
-    },
-    "partida de Lola": {
-        "jugador": {
-            "id": "6093",
-            "name": "Lola",
-            "gender": "Female",
-            "age": "41",
-            "marital_status": "Married",
-            "alive": "Alive",
-            "father": "0",
-            "mother": "1",
-            "house": "4117"
-        },
-        "Puntuacion": 0,
-        "Posicion": [
-            1525,
-            1350
-        ]
-    },
     "partida de Berenjena": {
         "jugador": {
             "id": "7076",
             "name": "Berenjena",
             "gender": "Female",
-            "age": "29",
+            "age": "32",
             "marital_status": "Married",
             "alive": "Alive",
             "father": "4178",
             "mother": "7066",
             "house": "4118"
         },
-        "Puntuacion": 0,
-        "Posicion": [
-            400,
-            400
-        ]
+        "Puntuacion": 65,
+        "Arbol": {
+            "7076": {
+                "id": "7076",
+                "name": "Berenjena",
+                "padre": "4178",
+                "madre": "7066",
+                "hijos": []
+            },
+            "4178": {
+                "id": "4178",
+                "name": "Santiago",
+                "padre": "0",
+                "madre": "1",
+                "hijos": [
+                    null,
+                    {
+                        "id": "7078",
+                        "name": "David Bowie",
+                        "padre": "4178",
+                        "madre": "7066",
+                        "hijos": [
+                            {
+                                "id": "7080",
+                                "name": "fortnite",
+                                "padre": "7078",
+                                "madre": "5391",
+                                "hijos": []
+                            }
+                        ]
+                    }
+                ]
+            },
+            "7066": {
+                "id": "7066",
+                "name": "Megatron",
+                "padre": "6447",
+                "madre": "7062",
+                "hijos": [
+                    null,
+                    null
+                ]
+            },
+            "0": {
+                "id": "0",
+                "name": "Ad\u00e1n",
+                "padre": null,
+                "madre": null,
+                "hijos": [
+                    null,
+                    {
+                        "id": "6447",
+                        "name": "Marcus",
+                        "padre": "0",
+                        "madre": "1",
+                        "hijos": [
+                            null,
+                            {
+                                "id": "7068",
+                                "name": "Jigsaw",
+                                "padre": "6447",
+                                "madre": "7062",
+                                "hijos": []
+                            },
+                            {
+                                "id": "7069",
+                                "name": "Humberto",
+                                "padre": "6447",
+                                "madre": "7062",
+                                "hijos": []
+                            }
+                        ]
+                    },
+                    {
+                        "id": "5047",
+                        "name": "Justin",
+                        "padre": "0",
+                        "madre": "1",
+                        "hijos": [
+                            {
+                                "id": "7023",
+                                "name": "Tugor",
+                                "padre": "5047",
+                                "madre": "5134",
+                                "hijos": [
+                                    {
+                                        "id": "7056",
+                                        "name": "Fabickens",
+                                        "padre": "7023",
+                                        "madre": "6573",
+                                        "hijos": [
+                                            {
+                                                "id": "7062",
+                                                "name": "Anita",
+                                                "padre": "7056",
+                                                "madre": "6529",
+                                                "hijos": [
+                                                    null,
+                                                    null,
+                                                    null
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "id": "5134",
+                        "name": "Daniella",
+                        "padre": "0",
+                        "madre": "1",
+                        "hijos": [
+                            null
+                        ]
+                    },
+                    {
+                        "id": "6573",
+                        "name": "Diana",
+                        "padre": "0",
+                        "madre": "1",
+                        "hijos": [
+                            null
+                        ]
+                    },
+                    {
+                        "id": "6529",
+                        "name": "Blaire",
+                        "padre": "0",
+                        "madre": "1",
+                        "hijos": [
+                            null
+                        ]
+                    },
+                    {
+                        "id": "4060",
+                        "name": "Amari",
+                        "padre": "0",
+                        "madre": "1",
+                        "hijos": []
+                    }
+                ]
+            },
+            "1": {
+                "id": "1",
+                "name": "Eva",
+                "padre": null,
+                "madre": null,
+                "hijos": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+                ]
+            },
+            "6447": null,
+            "7062": null,
+            "7056": null,
+            "6529": null,
+            "7023": null,
+            "6573": null,
+            "5047": null,
+            "5134": null,
+            "7078": null,
+            "7080": null,
+            "4060": null,
+            "7068": null,
+            "7069": null
+        }
     }
 }

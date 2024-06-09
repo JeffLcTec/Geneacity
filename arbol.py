@@ -83,18 +83,21 @@ class ArbolGenealogico:
                 total_width = (num_hijos -1)* x_gap
                 x_start = x - total_width // 2 + x_gap // 2
                 for i, hijo in enumerate(hijos):
-                    if hijo.id in posiciones:
+                    if hijo==None:
+                        pass
+                    else:
+                        if hijo.id in posiciones:
+                            y_nuevo = y + y_step
+                            if y_nuevo<posiciones[hijo.id][1]:
+                                y_nuevo=posiciones[hijo.id][1]
+                            posiciones[hijo.id] = (posiciones[hijo.id][0], y_nuevo)
+                            posicionar_hijos(hijo, posiciones[hijo.id][0], y_nuevo)
+                            break
                         y_nuevo = y + y_step
-                        if y_nuevo<posiciones[hijo.id][1]:
-                            y_nuevo=posiciones[hijo.id][1]
-                        posiciones[hijo.id] = (posiciones[hijo.id][0], y_nuevo)
-                        posicionar_hijos(hijo, posiciones[hijo.id][0], y_nuevo)
-                        break
-                    y_nuevo = y + y_step
-                    x_nuevo = x_start + i * 50
-                    
-                    posiciones[hijo.id] = (x_nuevo, y_nuevo)
-                    posicionar_hijos(hijo, x_nuevo, y_nuevo)
+                        x_nuevo = x_start + i * 50
+                        
+                        posiciones[hijo.id] = (x_nuevo, y_nuevo)
+                        posicionar_hijos(hijo, x_nuevo, y_nuevo)
 
         for padre in padres:
             posicionar_hijos(padre, *posiciones[padre.id])
@@ -148,6 +151,57 @@ class ArbolGenealogico:
         self._obtener_ancestros_recursivo(persona.padre, ancestros, distancia + 1)
         self._obtener_ancestros_recursivo(persona.madre, ancestros, distancia + 1)
 
+def nodo_a_dict(nodo, visitados):
+    if not nodo or nodo.id in visitados:
+        return None
+
+    visitados.add(nodo.id)
+
+    return {
+        "id": nodo.id,
+        "name": nodo.name,
+        "padre": nodo.padre.id if nodo.padre else None,
+        "madre": nodo.madre.id if nodo.madre else None,
+        "hijos": [nodo_a_dict(hijo, visitados) for hijo in nodo.hijos]
+    }
+
+def arbol_a_dict(arbol):
+    visitados = set()
+    return {id: nodo_a_dict(nodo, visitados) for id, nodo in arbol.personas.items()}
+
+def dict_a_nodo(nodo_dict, nodos):
+    if not nodo_dict:
+        return None
+
+    if nodo_dict['id'] in nodos:
+        return nodos[nodo_dict['id']]
+
+    nodo = Nodo(nodo_dict['id'], nodo_dict['name'])
+    nodos[nodo_dict['id']] = nodo
+
+    if nodo_dict['padre']:
+        nodo.padre = dict_a_nodo(nodo_dict['padre'], nodos)
+        nodo.padre.hijos.append(nodo)
+
+    if nodo_dict['madre']:
+        nodo.madre = dict_a_nodo(nodo_dict['madre'], nodos)
+        nodo.madre.hijos.append(nodo)
+
+    for hijo_dict in nodo_dict['hijos']:
+        hijo = dict_a_nodo(hijo_dict, nodos)
+        nodo.hijos.append(hijo)
+
+    return nodo
+
+def dict_a_arbol(arbol_dict):
+    arbol = ArbolGenealogico()
+    nodos = {}
+
+    for id, nodo_dict in arbol_dict.items():
+        dict_a_nodo(nodo_dict, nodos)
+
+    arbol.personas = nodos
+    return arbol
 
 def determinar_vinculo(relacion_jugador, relacion_persona):
     if relacion_jugador == "Ego" and relacion_persona == "Ego":

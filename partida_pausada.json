@@ -1,0 +1,188 @@
+{
+    "partida actual": {
+        "jugador": {
+            "id": "7076",
+            "name": "Berenjena",
+            "gender": "Female",
+            "age": "32",
+            "marital_status": "Married",
+            "alive": "Alive",
+            "father": "4178",
+            "mother": "7066",
+            "house": "4118"
+        },
+        "Puntuacion": 65,
+        "Arbol": {
+            "7076": {
+                "id": "7076",
+                "name": "Berenjena",
+                "padre": "4178",
+                "madre": "7066",
+                "hijos": []
+            },
+            "4178": {
+                "id": "4178",
+                "name": "Santiago",
+                "padre": "0",
+                "madre": "1",
+                "hijos": [
+                    null,
+                    {
+                        "id": "7078",
+                        "name": "David Bowie",
+                        "padre": "4178",
+                        "madre": "7066",
+                        "hijos": [
+                            {
+                                "id": "7080",
+                                "name": "fortnite",
+                                "padre": "7078",
+                                "madre": "5391",
+                                "hijos": []
+                            }
+                        ]
+                    }
+                ]
+            },
+            "7066": {
+                "id": "7066",
+                "name": "Megatron",
+                "padre": "6447",
+                "madre": "7062",
+                "hijos": [
+                    null,
+                    null
+                ]
+            },
+            "0": {
+                "id": "0",
+                "name": "Ad\u00e1n",
+                "padre": null,
+                "madre": null,
+                "hijos": [
+                    null,
+                    {
+                        "id": "6447",
+                        "name": "Marcus",
+                        "padre": "0",
+                        "madre": "1",
+                        "hijos": [
+                            null,
+                            {
+                                "id": "7068",
+                                "name": "Jigsaw",
+                                "padre": "6447",
+                                "madre": "7062",
+                                "hijos": []
+                            },
+                            {
+                                "id": "7069",
+                                "name": "Humberto",
+                                "padre": "6447",
+                                "madre": "7062",
+                                "hijos": []
+                            }
+                        ]
+                    },
+                    {
+                        "id": "5047",
+                        "name": "Justin",
+                        "padre": "0",
+                        "madre": "1",
+                        "hijos": [
+                            {
+                                "id": "7023",
+                                "name": "Tugor",
+                                "padre": "5047",
+                                "madre": "5134",
+                                "hijos": [
+                                    {
+                                        "id": "7056",
+                                        "name": "Fabickens",
+                                        "padre": "7023",
+                                        "madre": "6573",
+                                        "hijos": [
+                                            {
+                                                "id": "7062",
+                                                "name": "Anita",
+                                                "padre": "7056",
+                                                "madre": "6529",
+                                                "hijos": [
+                                                    null,
+                                                    null,
+                                                    null
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "id": "5134",
+                        "name": "Daniella",
+                        "padre": "0",
+                        "madre": "1",
+                        "hijos": [
+                            null
+                        ]
+                    },
+                    {
+                        "id": "6573",
+                        "name": "Diana",
+                        "padre": "0",
+                        "madre": "1",
+                        "hijos": [
+                            null
+                        ]
+                    },
+                    {
+                        "id": "6529",
+                        "name": "Blaire",
+                        "padre": "0",
+                        "madre": "1",
+                        "hijos": [
+                            null
+                        ]
+                    },
+                    {
+                        "id": "4060",
+                        "name": "Amari",
+                        "padre": "0",
+                        "madre": "1",
+                        "hijos": []
+                    }
+                ]
+            },
+            "1": {
+                "id": "1",
+                "name": "Eva",
+                "padre": null,
+                "madre": null,
+                "hijos": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+                ]
+            },
+            "6447": null,
+            "7062": null,
+            "7056": null,
+            "6529": null,
+            "7023": null,
+            "6573": null,
+            "5047": null,
+            "5134": null,
+            "7078": null,
+            "7080": null,
+            "4060": null,
+            "7068": null,
+            "7069": null
+        }
+    }
+}

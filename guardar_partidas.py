@@ -14,23 +14,38 @@ def guardar_partida(datos, archivo):
     try:
         with open(archivo, 'w') as f:
             json.dump(datos, f, indent=4)
-        print(f"Los datos se han guardado en el archivo '{archivo}' correctamente.")
     except Exception as e:
-        print(f"Error al guardar los datos: {e}")
+        print(f"Error al guardar el archivo {archivo}: {e}")
 
-def crear_partida(jugador: dict, puntos: int, pos: tuple):
+def guardar_partida_pausada(partida, archivo):
+    """
+    Guarda una única partida en un archivo JSON.
+
+    Args:
+        partida (dict): Diccionario con los datos de la partida.
+        archivo (str): El nombre del archivo JSON.
+
+    Returns:
+        None
+    """
+    try:
+        with open(archivo, 'w') as f:
+            json.dump(partida, f, indent=4)
+    except Exception as e:
+        print(f"Error al guardar el archivo {archivo}: {e}")
+
+def crear_partida(jugador: dict, puntos: int, arbol:dict):
     """
     Crea una nueva partida con los datos del jugador.
 
     Args:
         jugador (dict): Diccionario con los datos del jugador.
         puntos (int): Puntuación del jugador.
-        pos (tuple): Posición del jugador.
 
     Returns:
         None
     """
-    partida = {"jugador": jugador, "Puntuacion": puntos, "Posicion": pos}
+    partida = {"jugador": jugador, "Puntuacion": puntos, "Arbol": arbol}
 
     try:
         with open("partidas.json", 'r') as archivo:
@@ -41,12 +56,21 @@ def crear_partida(jugador: dict, puntos: int, pos: tuple):
     except FileNotFoundError:
         partidas_guardadas = {}
 
+    try:
+        with open("partida_pausada.json", 'r') as archivo:
+            try:
+                partida_pausada = json.load(archivo)
+            except json.JSONDecodeError:
+                partida_pausada = {}
+    except FileNotFoundError:
+        partida_pausada = {}
 
     # Agregar la nueva partida
-    partidas_guardadas[f"partida de {jugador["name"]}"] = partida
+    partidas_guardadas[f"partida de {jugador['name']}"] = partida
+    partida_pausada["partida actual"] = partida
 
     # Guardar las partidas de nuevo en el archivo
     guardar_partida(partidas_guardadas, "partidas.json")
 
-    print(f"Partida guardada como 'partida de {jugador["name"]}'.")
-
+    # Guardar la partida pausada en un archivo separado
+    guardar_partida_pausada(partida_pausada, "partida_pausada.json")

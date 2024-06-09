@@ -10,8 +10,11 @@ def nueva_partida(ventana_menu: tk.Tk):
     ventana_menu.destroy()
     seleccionar_personaje()
 
-def cargar_partida():
-    pass
+def cargar_partida(jugador, puntos, ventana_menu):
+    global puntaje_actual
+    ventana_menu.destroy()
+    puntaje_actual=puntos
+    game(jugador)
 
 
 def seleccionar_personaje():
@@ -527,16 +530,16 @@ def game(jugador):
                 screen.blit(text,(102,2))
         
         if ventana_parentezco==True:
-                while tiempo<=4000:
-                    tiempo+=1
-                    resultado = pygame.Rect(170, 553, 470, 50)
-                    pygame.draw.rect(screen, (94, 76, 72), resultado)
-                    font = pygame.font.Font(None, 20)
-                    text = font.render(f"Esta persona {parentezco}!!", True, (255,255,255))
-                    screen.blit(text,(195,566))
-                    pygame.display.update()
-                tiempo=0
-                ventana_parentezco=False        
+            while tiempo<=3000:
+                tiempo+=1
+                resultado = pygame.Rect(170, 553, 470, 50)
+                pygame.draw.rect(screen, (94, 76, 72), resultado)
+                font = pygame.font.Font(None, 20)
+                text = font.render(f"Esta persona {parentezco}!!", True, (255,255,255))
+                screen.blit(text,(195,566))
+                pygame.display.update()
+            tiempo=0
+            ventana_parentezco=False         
             
        
         ventana_j=pygame.Rect(0,0,100,100)
@@ -583,7 +586,8 @@ def game(jugador):
                 # Actualizar la ventana
                 pygame.display.update()
             current_frame=0
-            crear_partida(jugador,puntaje_actual,(jugadorx,jugadory))
+            arbol_dict = arbol_a_dict(three)
+            crear_partida(jugador,puntaje_actual,arbol_dict)
 
         tiempo+=1
         pygame.display.update()
