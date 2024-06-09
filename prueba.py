@@ -28,7 +28,7 @@ def seleccionar_personaje():
 
     # Bucle principal del juego
     def personas_disponibles():
-        disponibles = geneacity_API_request("https://geneacity.life/API/getAvailableInhabitants/?x=70000&y=70000")
+        disponibles = geneacity_API_request("https://geneacity.life/API/getAvailableInhabitants/?x=80000&y=80000")
         return disponibles.json
 
     personajes_disponibles = personas_disponibles()
@@ -87,9 +87,10 @@ def seleccionar_personaje():
         pygame.display.flip()
 
 def buscar_parentezco(jugador,persona):
-    arbol_jugador=arbol_persona(jugador)
+    arbol_j=three
     arbol_p= arbol_persona(persona)
-    puntuacion= buscar_similitud(jugador,persona,arbol_jugador,arbol_p)
+    puntuacion= buscar_similitud(jugador,persona,arbol_j,arbol_p)
+
     return puntuacion
 def arbol_persona(persona):
     three_persona.agregar_nodo(Persona(persona["id"],persona["name"]))
@@ -98,32 +99,56 @@ def arbol_persona(persona):
         madre=info_persona(info_persona(persona["id"])["mother"])
         familiares=[three_persona.agregar_nodo(Persona(padre["id"], padre["name"])),three_persona.agregar_nodo(Persona(madre["id"], madre["name"]))]
         three_persona.establecer_padre(persona["id"],padre["id"])
-        three_persona.establecer_madre(persona["id"],madre["id"])
-        arbol_persona(padre)
-        arbol_persona(madre)
+        three_persona.establecer_madre(persona["id"],madre["id"]) 
         pass
         
     else:
         pass
     return three_persona
+def arbol_jugador(persona, three):
+    if persona["id"] not in three.personas:
+        three.agregar_nodo(Nodo(persona["id"], persona["name"]))
+
+    if persona["father"] and persona["mother"]:
+        padre_id = persona["father"]
+        madre_id = persona["mother"]
+
+        if padre_id not in three.memo:
+            padre = info_persona(padre_id)
+            three.memo[padre_id] = padre
+        else:
+            padre = three.memo[padre_id]
+
+        if madre_id not in three.memo:
+            madre = info_persona(madre_id)
+            three.memo[madre_id] = madre
+        else:
+            madre = three.memo[madre_id]
+
+        if padre_id not in three.personas:
+            three.agregar_nodo(Nodo(padre["id"], padre["name"]))
+        if madre_id not in three.personas:
+            three.agregar_nodo(Nodo(madre["id"], madre["name"]))
+
+        three.establecer_padre(persona["id"], padre["id"])
+        three.establecer_madre(persona["id"], madre["id"])
+
+        arbol_jugador(padre, three)
+        arbol_jugador(madre, three)
+
+    return three
     
-def ver_familia(jugador,Ver):
-    from utilidades import three
-    three.agregar_nodo(Persona(jugador["id"],jugador["name"]))
-    if jugador["father"] and jugador["mother"]:
-        padre=info_persona(info_persona(jugador["id"])["father"])
-        madre=info_persona(info_persona(jugador["id"])["mother"])
-        familiares=[three.agregar_nodo(Persona(padre["id"], padre["name"])),three.agregar_nodo(Persona(madre["id"], madre["name"]))]
-        three.establecer_padre(jugador["id"],padre["id"])
-        three.establecer_madre(jugador["id"],madre["id"])
-        
+def ver_familia(three,Ver):
+    global screen_width
     if Ver==True:
         ventana = tk.Tk()
         ventana.title("Árbol Genealógico")
-        ventana.geometry("400x400+500+200")
-        canvas = tk.Canvas(ventana, width=800, height=600, bg="white")
+        screen_width = ventana.winfo_screenwidth()
+        screen_height = ventana.winfo_screenheight()
+        ventana.geometry(f"{screen_width}x{screen_height}+0+0")
+        canvas = tk.Canvas(ventana, width=screen_width, height=screen_height, bg='lightblue')
         canvas.pack()
-        three.ver_arbol(canvas, ventana)
+        three.dibujar_arbol(canvas)
         ventana.mainloop()
  
 def imagen(contadores, imagen, direccion):
@@ -215,6 +240,7 @@ def request_casas(lista, jx, jy):
 
             
 def game(jugador):
+    global screen_width
     from PIL import Image
     from arbol import ArbolGenealogico,Persona,Nodo
     from utilidades import current_frame,frame_count,frame_actual,frames,ventana_parentezco,puntaje_actual, j_info_open,jsons, habitantes, contadores, sprites, skins, size, screen, image, image_rect, casa_img, x, y, jugadorx, jugadory, clock, speed, fondo, tile_size, tiles, window_open, persona_info_open, esc_press, lockW, lockA, lockS, lockD, cont_casas
@@ -224,14 +250,11 @@ def game(jugador):
     tiempo =0
     jugador=info_persona(jugador["id"])
     pygame.init()
-    from utilidades import three
-    three.agregar_nodo(Persona(jugador["id"],jugador["name"]))
-    if jugador["father"] and jugador["mother"]:
-        padre=info_persona(info_persona(jugador["id"])["father"])
-        madre=info_persona(info_persona(jugador["id"])["mother"])
-        familiares=[three.agregar_nodo(Persona(padre["id"], padre["name"])),three.agregar_nodo(Persona(madre["id"], madre["name"]))]
-        three.establecer_padre(jugador["id"],padre["id"])
-        three.establecer_madre(jugador["id"],madre["id"])
+    arbol_jugador(jugador,three)
+    ventana = tk.Tk()
+    screen_width = ventana.winfo_screenwidth()
+    three.posiciones = three.calcular_posiciones(screen_width)
+    ventana.destroy()
     while True:
         
         screen.fill([48, 126, 201])
@@ -283,7 +306,7 @@ def game(jugador):
             if event.type == pygame.MOUSEBUTTONDOWN: 
                 if j_info_open:
                     if arbol.collidepoint(event.pos):
-                        ver_familia(jugador,Ver=True) 
+                        ver_familia(three,Ver=True) 
                 if ventana_j.collidepoint(event.pos):
                     jinfo=info_persona(jugador["id"])
                     j_info_open=True
@@ -342,6 +365,18 @@ def game(jugador):
                         puntaje_actual+=retorno[0]
                         parentezco=retorno[1]
                         ventana_parentezco=True 
+                        if retorno[2]==None:
+                            pass
+                        else:
+                            three.agregar_nodo(retorno[2])
+                            padre=retorno[2].padre
+                            madre=retorno[2].madre
+                            three.establecer_padre(retorno[2].id, padre.id)
+                            three.establecer_madre(retorno[2].id, madre.id)   
+
+                            nueva_pos = three.calcular_posicion_nueva_persona(padre.id, madre.id)
+                            if nueva_pos:
+                                three.posiciones[retorno[2].id] = nueva_pos
                         pass
                     if event.type == pygame.KEYDOWN and event.key == pygame.K_BACKSPACE:
                         person_info_open = False
@@ -496,7 +531,7 @@ def game(jugador):
                     tiempo+=1
                     resultado = pygame.Rect(170, 553, 470, 50)
                     pygame.draw.rect(screen, (94, 76, 72), resultado)
-                    font = pygame.font.Font(None, 36)
+                    font = pygame.font.Font(None, 20)
                     text = font.render(f"Esta persona {parentezco}!!", True, (255,255,255))
                     screen.blit(text,(195,566))
                     pygame.display.update()

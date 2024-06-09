@@ -11,7 +11,6 @@ class Persona:
     def __str__(self) -> str:
         return f"({self.id}, {self.name})"
 
-
 class Nodo:
     def __init__(self, id, name):
         self.id = id
@@ -25,6 +24,7 @@ class ArbolGenealogico:
     def __init__(self):
         self.personas = {}
         self.nodos_dibujados = set()
+        self.memo = {}
 
     def agregar_nodo(self, nodo):
         if nodo.id not in self.personas:
@@ -32,121 +32,93 @@ class ArbolGenealogico:
 
     def establecer_padre(self, id_nodo, id_padre):
         if id_nodo in self.personas and id_padre in self.personas:
-            self.personas[id_nodo].padre = self.personas[id_padre]
-            self.personas[id_padre].hijos.append(self.personas[id_nodo])
+            if not any(hijo.id == id_nodo for hijo in self.personas[id_padre].hijos):
+                self.personas[id_nodo].padre = self.personas[id_padre]
+                self.personas[id_padre].hijos.append(self.personas[id_nodo])
 
     def establecer_madre(self, id_nodo, id_madre):
         if id_nodo in self.personas and id_madre in self.personas:
-            self.personas[id_nodo].madre = self.personas[id_madre]
-            self.personas[id_madre].hijos.append(self.personas[id_nodo])
+            if not any(hijo.id == id_nodo for hijo in self.personas[id_madre].hijos):
+                self.personas[id_nodo].madre = self.personas[id_madre]
+                self.personas[id_madre].hijos.append(self.personas[id_nodo])
 
-    def ver_arbol(self, canvas: tk.Canvas, ventana: tk.Tk) -> None:
-        ventana.update()
-        raices = [persona for persona in self.personas.values() if persona.padre is None and persona.madre is None]
-        y_start = 40  # Reducido
-        level_spacing = 60  # Reducido
-        sibling_spacing = 80  # Reducido
-
-        # Para rastrear nodos ya dibujados y evitar duplicados
-        self.nodos_dibujados = set()
-        ancho_canvas = canvas.winfo_width()
-        x_start = ancho_canvas // 2 - 50
-
-        for i, raiz in enumerate(raices):
-            self.__ver_arbol(canvas, x_start + i * sibling_spacing, y_start, raiz, level_spacing, sibling_spacing, is_root=True)
-        
-        label = tk.Label(ventana, text="Cierra para ver el vínculo!!!")
-        label.pack(padx=20, pady=20)
-        ventana.mainloop()
-
-    def __ver_arbol(self, canvas: tk.Canvas, x, y, nodo: Nodo, level_spacing, sibling_spacing, is_root=False) -> None:
-        # Dibuja el árbol recursivamente en el canvas
-        if nodo in self.nodos_dibujados:
-            return
-
-        self.nodos_dibujados.add(nodo)
-        radius = 20  # Reducido
-        # Dibuja un óvalo para representar el nodo
-        canvas.create_oval(x - radius, y - radius, x + radius, y + radius, outline="#00BB00", fill="white", width=2)  # Ajustado el ancho del borde
-        # Dibuja el nombre de la persona en el nodo
-        canvas.create_text(x, y, text=nodo.name, font=("Helvetica", 8))  # Tamaño de fuente reducido
-
-        padre_x = None
-        madre_x = None
-
-        if nodo.padre and nodo.madre and not is_root:
-            # Calcula las coordenadas para dibujar las líneas entre padres e hijos
-            padre_x = x - sibling_spacing
-            madre_x = x + sibling_spacing
-            mid_x = (padre_x + madre_x) / 2
-            parent_y = y - level_spacing + radius
-
-            # Línea horizontal entre los padres
-            canvas.create_line(padre_x + 25, parent_y, madre_x + 25, parent_y, fill="black", width=1)  # Ajustado
-            # Línea vertical desde el punto medio al nodo del hijo
-            canvas.create_line(mid_x + 25, parent_y, mid_x + 25, y - radius, fill="black", width=1)  # Ajustado
-        elif is_root:
-            # Asigna coordenadas a los padres si es el nodo raíz
-            padre_x = x - sibling_spacing // 2
-            madre_x = x + sibling_spacing // 2
-            mid_x = x
-            parent_y = y
-
-        if nodo.hijos:
-            # Dibuja una línea horizontal para conectar todos los hijos
-            hijo_start_x = x + 25 - (len(nodo.hijos) - 1) * sibling_spacing // 2
-            if len(nodo.hijos) == 2:
-                hijo_end_x = x + (len(nodo.hijos) - 1) * sibling_spacing // 2
+    def calcular_posicion_nueva_persona(self, id_padre, id_madre):
+        if id_padre in self.posiciones and id_madre in self.posiciones:
+            x_padre, y_padre = self.posiciones[id_padre]
+            x_madre, y_madre = self.posiciones[id_madre]
+            num_hijos = max(len(self.personas[id_padre].hijos), len(self.personas[id_madre].hijos))
+            x_nuevo = (x_padre + x_madre) // 2
+            if y_madre>y_padre:
+                y_nuevo = y_madre + 50
             else:
-                hijo_end_x = x - 25 + (len(nodo.hijos) - 1) * sibling_spacing // 2
-            canvas.create_line(hijo_start_x, y + level_spacing - radius, hijo_end_x, y + level_spacing - radius, fill="black", width=1)  # Ajustado
+                y_nuevo = y_padre +50
+            if num_hijos > 0:
+                x_nuevo -= (num_hijos-1) * 50
+            return x_nuevo, y_nuevo
+        return None
 
-            child_y = y + level_spacing
-            child_x = hijo_start_x
+    def calcular_posiciones(self,screen):
+        posiciones = {}
+        y_step = 50
+        x_center = screen//2
+        x_gap = 100  # Espacio horizontal entre los nodos hijos
+        y_start = 50  # Y inicial para los padres
 
-            for hijo in nodo.hijos:
-                # Asigna coordenadas a los hijos
-                hijo.padre_x = padre_x
-                hijo.madre_x = madre_x
-                # Dibuja una línea vertical desde la línea horizontal a cada hijo
-                canvas.create_line(child_x, y + level_spacing - radius, child_x, child_y - radius, fill="black", width=1)  # Ajustado
-                self.__ver_arbol(canvas, child_x, child_y, hijo, level_spacing, sibling_spacing)
-                child_x += sibling_spacing
+        # Encuentra los nodos que no tienen padres ni madres, es decir, los ancestros iniciales
+        padres = [nodo for nodo in self.personas.values() if not nodo.padre and not nodo.madre]
 
-        # Dibuja a los hermanos del nodo
-        if nodo.padre or nodo.madre:
-            hermanos = []
-            if nodo.padre:
-                hermanos.extend(nodo.padre.hijos)
-            if nodo.madre:
-                hermanos.extend(nodo.madre.hijos)
-            hermanos = [hermano for hermano in hermanos if hermano != nodo]
+        if len(padres) >= 2:
+            posiciones[padres[0].id] = (x_center - x_gap // 2, y_start)
+            posiciones[padres[1].id] = (x_center + x_gap // 2, y_start)
 
-            sibling_y = y
-            sibling_x = x + sibling_spacing
+        def contar_descendientes(nodo):
+            if not nodo.hijos:
+                return 1
+            return sum(contar_descendientes(hijo) for hijo in nodo.hijos)
 
-            for hermano in hermanos:
-                if hermano not in self.nodos_dibujados:
-                    canvas.create_line(x + radius, y, sibling_x - radius, sibling_y, fill="black", width=1)  # Ajustado
-                    self.__ver_arbol(canvas, sibling_x, sibling_y, hermano, level_spacing, sibling_spacing)
-                    sibling_x += sibling_spacing
+        def posicionar_hijos(nodo, x, y):
+            hijos = nodo.hijos
+            num_hijos = len(hijos)
+            if num_hijos > 0:
+                total_width = (num_hijos -1)* x_gap
+                x_start = x - total_width // 2 + x_gap // 2
+                for i, hijo in enumerate(hijos):
+                    if hijo.id in posiciones:
+                        y_nuevo = y + y_step
+                        if y_nuevo<posiciones[hijo.id][1]:
+                            y_nuevo=posiciones[hijo.id][1]
+                        posiciones[hijo.id] = (posiciones[hijo.id][0], y_nuevo)
+                        posicionar_hijos(hijo, posiciones[hijo.id][0], y_nuevo)
+                        break
+                    y_nuevo = y + y_step
+                    x_nuevo = x_start + i * 50
+                    
+                    posiciones[hijo.id] = (x_nuevo, y_nuevo)
+                    posicionar_hijos(hijo, x_nuevo, y_nuevo)
 
-        # Dibuja a los abuelos del nodo
-        if nodo.padre:
-            abuelo_paterno = nodo.padre.padre
-            abuela_paterna = nodo.padre.madre
-            if abuelo_paterno:
-                self.__ver_arbol(canvas, x - sibling_spacing, y - level_spacing, abuelo_paterno, level_spacing, sibling_spacing)
-            if abuela_paterna:
-                self.__ver_arbol(canvas, x + sibling_spacing, y - level_spacing, abuela_paterna, level_spacing, sibling_spacing)
-        if nodo.madre:
-            abuelo_materno = nodo.madre.padre
-            abuela_materna = nodo.madre.madre
-            if abuelo_materno:
-                self.__ver_arbol(canvas, x - sibling_spacing, y - level_spacing, abuelo_materno, level_spacing, sibling_spacing)
-            if abuela_materna:
-                self.__ver_arbol(canvas, x + sibling_spacing, y - level_spacing, abuela_materna, level_spacing, sibling_spacing)
+        for padre in padres:
+            posicionar_hijos(padre, *posiciones[padre.id])
 
+        return posiciones
+
+
+
+
+    def dibujar_arbol(self, canvas):
+        for id_nodo, pos in self.posiciones.items():
+            self.dibujar_nodo(canvas, id_nodo, pos)
+
+    def dibujar_nodo(self, canvas, id_nodo, pos):
+        nodo = self.personas[id_nodo]
+        x, y = pos
+        canvas.create_oval(x-20, y-20, x+20, y+20, fill='white')
+        canvas.create_text(x, y, text=nodo.name)
+        if nodo.padre and nodo.padre.id in self.posiciones:
+            x_padre, y_padre = self.posiciones[nodo.padre.id]
+            canvas.create_line(x, y-20, x_padre, y_padre+20)
+        if nodo.madre and nodo.madre.id in self.posiciones:
+            x_madre, y_madre = self.posiciones[nodo.madre.id]
+            canvas.create_line(x, y-20, x_madre, y_madre+20)
 
     def obtener_ancestros(self, id_persona):
         ancestros = set()
@@ -166,9 +138,12 @@ class ArbolGenealogico:
         return ancestros
 
     def _obtener_ancestros_recursivo(self, persona, ancestros, distancia):
+        
         if persona is None:
             return
-        vinculo = ["Ego", "Padre/Madre", "Abuelo/Abuela", "Bisabuelo/Bisabuela", "Tatarabuelo/Tatarabuela"]
+        if persona.id in ancestros:
+            return
+        vinculo = ["Ego", "Padre/Madre", "Abuelo/Abuela", "Bisabuelo/Bisabuela", "Tatarabuelo/Tatarabuela","Trastatarabuelo/Trastatarabuela","Pentabuelo/Pentabuela"]
         ancestros[persona.id] = (persona.name, distancia, vinculo[min(distancia, len(vinculo) - 1)])
         self._obtener_ancestros_recursivo(persona.padre, ancestros, distancia + 1)
         self._obtener_ancestros_recursivo(persona.madre, ancestros, distancia + 1)
@@ -264,6 +239,7 @@ def buscar_similitud(jugador, persona, arbol1, arbol2):
     if ancestros_comunes:
         vinculo_jugador, vinculo_persona = ancestros_comunes[0]
 
+
         if vinculo_persona == "Padre/Madre":
             puntaje_actual += 5
         elif vinculo_persona == "Hijo/Hija":
@@ -323,10 +299,10 @@ def buscar_similitud(jugador, persona, arbol1, arbol2):
         print(f"Eres el {vinculo_jugador} de esta persona!!")
         print(f"Esta persona es tu {vinculo_persona}!!")
         print(puntaje_actual)
-        tupla = (puntaje_actual, f"Es tu {vinculo_persona}")
+        tupla = (puntaje_actual, f"Es tu {vinculo_persona}",arbol2.personas[persona["id"]])
     else:
         print("No se encontraron ancestros comunes.")
-        tupla = (puntaje_actual, "No tiene ningun vinculo.")
+        tupla = (puntaje_actual, "No tiene ningun vinculo o se desconoce.",None)
     
     return tupla
 
