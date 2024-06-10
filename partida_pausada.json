@@ -11,7 +11,7 @@
             "mother": "1",
             "house": "783"
         },
-        "Puntuacion": 0,
+        "Puntuacion": 10,
         "Arbol": {
             "personas": {
                 "4593": {
@@ -28,7 +28,11 @@
                     "madre": null,
                     "hijos": [
                         "4593",
-                        "4032"
+                        "4032",
+                        "6406",
+                        "4128",
+                        "5858",
+                        "4035"
                     ]
                 },
                 "1": {
@@ -38,12 +42,44 @@
                     "madre": null,
                     "hijos": [
                         "4593",
-                        "4032"
+                        "4032",
+                        "6406",
+                        "4128",
+                        "5858",
+                        "4035"
                     ]
                 },
                 "4032": {
                     "id": "4032",
                     "name": "Finn",
+                    "padre": "0",
+                    "madre": "1",
+                    "hijos": []
+                },
+                "6406": {
+                    "id": "6406",
+                    "name": "Georgia",
+                    "padre": "0",
+                    "madre": "1",
+                    "hijos": []
+                },
+                "4128": {
+                    "id": "4128",
+                    "name": "Kinsley",
+                    "padre": "0",
+                    "madre": "1",
+                    "hijos": []
+                },
+                "5858": {
+                    "id": "5858",
+                    "name": "Jose",
+                    "padre": "0",
+                    "madre": "1",
+                    "hijos": []
+                },
+                "4035": {
+                    "id": "4035",
+                    "name": "Cameron",
                     "padre": "0",
                     "madre": "1",
                     "hijos": []

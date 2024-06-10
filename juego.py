@@ -29,8 +29,8 @@ def cargar_partida(jugador, puntos, ventana_menu,arbol):
     global puntaje_actual,three
     three=arbol
     ventana_menu.destroy()
-    puntaje_actual=puntos
-    game(jugador)
+    
+    game(jugador,puntos)
 
 
 def seleccionar_personaje():
@@ -97,7 +97,7 @@ def seleccionar_personaje():
             jugador (_type_): jugador
         """
         estado= geneacity_API_request(f"https://geneacity.life/API/selectAvailableInhabitant/?id={jugador['id']}") 
-        game(jugador)
+        game(jugador,0)
 
     while True:
         for event in pygame.event.get():
@@ -337,7 +337,7 @@ def request_casas(lista, jx, jy):
     return lista
 
             
-def game(jugador):
+def game(jugador,pts):
     """
     Función principal del juego.
 
@@ -359,6 +359,7 @@ def game(jugador):
     screen_width = ventana.winfo_screenwidth()
     three.posiciones = three.calcular_posiciones(screen_width)
     ventana.destroy()
+    puntaje_actual+=pts
     while True:
         
         screen.fill([48, 126, 201])
@@ -619,7 +620,27 @@ def game(jugador):
                 screen.blit(pygame.transform.scale(pygame.image.load("imagenes_Proyecto3/marco.png").convert_alpha(),(152,40)),hijo.topleft) 
                 text = font.render("reproducirse", True, (255,255,255))
                 screen.blit(text,(102,2))
-        
+        if tiempo==700 or ventana_parentezco==True:
+            tiempo=0
+            jugador=info_persona(jugador["id"])
+            while current_frame<frame_count:
+                
+
+                # Limpiar la ventana
+                  # Fondo blanco
+
+                # Actualizar la imagen de la animación
+                screen.blit((frames[int(current_frame)]), (700, 0))  # Ajusta la posición según sea necesario
+
+                # Actualizar el frame actual
+                current_frame += animation_speed
+                
+
+                # Actualizar la ventana
+                pygame.display.update()
+            current_frame=0
+            arbol_dict = three.a_dict()
+            crear_partida(jugador,puntaje_actual,arbol_dict)
         if ventana_parentezco==True:
             while tiempo<=3000:
                 tiempo+=1
@@ -658,27 +679,7 @@ def game(jugador):
         screen.blit(text,(390,0))        
         if not window_open:
             speed=25
-        if tiempo==700 or tiempo==0:
-            tiempo=0
-            jugador=info_persona(jugador["id"])
-            while current_frame<frame_count:
-                
-
-                # Limpiar la ventana
-                  # Fondo blanco
-
-                # Actualizar la imagen de la animación
-                screen.blit((frames[int(current_frame)]), (700, 0))  # Ajusta la posición según sea necesario
-
-                # Actualizar el frame actual
-                current_frame += animation_speed
-                
-
-                # Actualizar la ventana
-                pygame.display.update()
-            current_frame=0
-            arbol_dict = three.a_dict()
-            crear_partida(jugador,puntaje_actual,arbol_dict)
+        
 
         tiempo+=1
         pygame.display.update()
