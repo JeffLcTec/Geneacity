@@ -12,7 +12,8 @@ sprites = {
     'a': ["sprites/11.png","sprites/11.png","sprites/11.png","sprites/11.png", "sprites/9.png","sprites/9.png","sprites/9.png","sprites/9.png", "sprites/11.png","sprites/11.png","sprites/11.png","sprites/11.png", "sprites/10.png","sprites/10.png","sprites/10.png","sprites/10.png"],
     'd': ["sprites/8.png","sprites/8.png","sprites/8.png","sprites/8.png", "sprites/6.png","sprites/6.png","sprites/6.png","sprites/6.png", "sprites/8.png","sprites/8.png","sprites/8.png","sprites/8.png", "sprites/7.png","sprites/7.png","sprites/7.png","sprites/7.png"],
 } 
-skins=["imagenes_Proyecto3/personajes/p1.jpg","imagenes_Proyecto3/personajes/p2.jpg","imagenes_Proyecto3/personajes/p3.jpg","imagenes_Proyecto3/personajes/p4.jpg","imagenes_Proyecto3/personajes/p5.jpg"]
+skins1=["imagenes_Proyecto3/personajes/p1.png","imagenes_Proyecto3/personajes/p2.png","imagenes_Proyecto3/personajes/p3.png","imagenes_Proyecto3/personajes/p4.png","imagenes_Proyecto3/personajes/p5.png"]
+skins2=["imagenes_Proyecto3/personajes/p6.png","imagenes_Proyecto3/personajes/p7.png","imagenes_Proyecto3/personajes/p8.png","imagenes_Proyecto3/personajes/p9.png","imagenes_Proyecto3/personajes/p10.png"]
 size = width, height =800, 800
 screen = pygame.display.set_mode(size)
 

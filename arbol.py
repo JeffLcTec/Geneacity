@@ -1,6 +1,7 @@
 import tkinter as tk
 
-class Persona:
+
+class Nodo:
     def __init__(self, id, name):
         self.id = id
         self.name = name
@@ -11,14 +12,20 @@ class Persona:
     def __str__(self) -> str:
         return f"({self.id}, {self.name})"
 
-class Nodo:
-    def __init__(self, id, name):
-        self.id = id
-        self.name = name
-        self.padre = None
-        self.madre = None
-        self.hijos = []
+    def a_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'padre': self.padre.id if self.padre else None,
+            'madre': self.madre.id if self.madre else None,
+            'hijos': [hijo.id for hijo in self.hijos]
+        }
 
+    @staticmethod
+    def de_dict(diccionario):
+        persona = Nodo(diccionario['id'], diccionario['name'])
+        # No establecemos padre, madre o hijos aún, porque pueden no haber sido creados.
+        return persona
 
 class ArbolGenealogico:
     def __init__(self):
@@ -41,6 +48,26 @@ class ArbolGenealogico:
             if not any(hijo.id == id_nodo for hijo in self.personas[id_madre].hijos):
                 self.personas[id_nodo].madre = self.personas[id_madre]
                 self.personas[id_madre].hijos.append(self.personas[id_nodo])
+
+    def a_dict(self):
+        return {
+            'personas': {id: persona.a_dict() for id, persona in self.personas.items()}
+        }
+
+    @staticmethod
+    def de_dict(diccionario):
+        arbol = ArbolGenealogico()
+        # Crear todas las personas primero
+        for id, persona_dict in diccionario['personas'].items():
+            arbol.agregar_nodo(Nodo.de_dict(persona_dict))
+        # Luego establecer las relaciones
+        for id, persona_dict in diccionario['personas'].items():
+            persona = arbol.personas[id]
+            if persona_dict['padre'] is not None:
+                arbol.establecer_padre(id, persona_dict['padre'])
+            if persona_dict['madre'] is not None:
+                arbol.establecer_madre(id, persona_dict['madre'])
+        return arbol
 
     def calcular_posicion_nueva_persona(self, id_padre, id_madre):
         if id_padre in self.posiciones and id_madre in self.posiciones:

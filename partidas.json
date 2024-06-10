@@ -1,188 +1,437 @@
 {
-    "partida de Berenjena": {
+    "partida de Serena": {
         "jugador": {
-            "id": "7076",
-            "name": "Berenjena",
+            "id": "7122",
+            "name": "Serena",
             "gender": "Female",
-            "age": "32",
-            "marital_status": "Married",
+            "age": "23",
+            "marital_status": "Single",
             "alive": "Alive",
-            "father": "4178",
-            "mother": "7066",
-            "house": "4118"
+            "father": "7112",
+            "mother": "7116",
+            "house": "4142"
         },
-        "Puntuacion": 65,
+        "Puntuacion": 0,
         "Arbol": {
-            "7076": {
-                "id": "7076",
-                "name": "Berenjena",
-                "padre": "4178",
-                "madre": "7066",
-                "hijos": []
-            },
-            "4178": {
-                "id": "4178",
-                "name": "Santiago",
-                "padre": "0",
-                "madre": "1",
-                "hijos": [
-                    null,
-                    {
-                        "id": "7078",
-                        "name": "David Bowie",
-                        "padre": "4178",
-                        "madre": "7066",
-                        "hijos": [
-                            {
-                                "id": "7080",
-                                "name": "fortnite",
-                                "padre": "7078",
-                                "madre": "5391",
-                                "hijos": []
-                            }
-                        ]
-                    }
-                ]
-            },
-            "7066": {
-                "id": "7066",
-                "name": "Megatron",
-                "padre": "6447",
-                "madre": "7062",
-                "hijos": [
-                    null,
-                    null
-                ]
-            },
-            "0": {
-                "id": "0",
-                "name": "Ad\u00e1n",
-                "padre": null,
-                "madre": null,
-                "hijos": [
-                    null,
-                    {
-                        "id": "6447",
-                        "name": "Marcus",
-                        "padre": "0",
-                        "madre": "1",
-                        "hijos": [
-                            null,
-                            {
-                                "id": "7068",
-                                "name": "Jigsaw",
-                                "padre": "6447",
-                                "madre": "7062",
-                                "hijos": []
-                            },
-                            {
-                                "id": "7069",
-                                "name": "Humberto",
-                                "padre": "6447",
-                                "madre": "7062",
-                                "hijos": []
-                            }
-                        ]
-                    },
-                    {
-                        "id": "5047",
-                        "name": "Justin",
-                        "padre": "0",
-                        "madre": "1",
-                        "hijos": [
-                            {
-                                "id": "7023",
-                                "name": "Tugor",
-                                "padre": "5047",
-                                "madre": "5134",
-                                "hijos": [
-                                    {
-                                        "id": "7056",
-                                        "name": "Fabickens",
-                                        "padre": "7023",
-                                        "madre": "6573",
-                                        "hijos": [
-                                            {
-                                                "id": "7062",
-                                                "name": "Anita",
-                                                "padre": "7056",
-                                                "madre": "6529",
-                                                "hijos": [
-                                                    null,
-                                                    null,
-                                                    null
-                                                ]
-                                            }
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "id": "5134",
-                        "name": "Daniella",
-                        "padre": "0",
-                        "madre": "1",
-                        "hijos": [
-                            null
-                        ]
-                    },
-                    {
-                        "id": "6573",
-                        "name": "Diana",
-                        "padre": "0",
-                        "madre": "1",
-                        "hijos": [
-                            null
-                        ]
-                    },
-                    {
-                        "id": "6529",
-                        "name": "Blaire",
-                        "padre": "0",
-                        "madre": "1",
-                        "hijos": [
-                            null
-                        ]
-                    },
-                    {
-                        "id": "4060",
-                        "name": "Amari",
-                        "padre": "0",
-                        "madre": "1",
-                        "hijos": []
-                    }
-                ]
-            },
-            "1": {
-                "id": "1",
-                "name": "Eva",
-                "padre": null,
-                "madre": null,
-                "hijos": [
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null
-                ]
-            },
-            "6447": null,
-            "7062": null,
-            "7056": null,
-            "6529": null,
-            "7023": null,
-            "6573": null,
-            "5047": null,
-            "5134": null,
-            "7078": null,
-            "7080": null,
-            "4060": null,
-            "7068": null,
-            "7069": null
+            "personas": {
+                "7122": {
+                    "id": "7122",
+                    "name": "Serena",
+                    "padre": "7112",
+                    "madre": "7116",
+                    "hijos": []
+                },
+                "7112": {
+                    "id": "7112",
+                    "name": "Benji Bananas",
+                    "padre": "7110",
+                    "madre": "7111",
+                    "hijos": [
+                        "7122"
+                    ]
+                },
+                "7116": {
+                    "id": "7116",
+                    "name": "Lux",
+                    "padre": "7113",
+                    "madre": "7057",
+                    "hijos": [
+                        "7122"
+                    ]
+                },
+                "7110": {
+                    "id": "7110",
+                    "name": "John Snow",
+                    "padre": "7095",
+                    "madre": "7091",
+                    "hijos": [
+                        "7112"
+                    ]
+                },
+                "7111": {
+                    "id": "7111",
+                    "name": "Leonarda Viq",
+                    "padre": "7095",
+                    "madre": "7091",
+                    "hijos": [
+                        "7112"
+                    ]
+                },
+                "7095": {
+                    "id": "7095",
+                    "name": "Denji",
+                    "padre": "5865",
+                    "madre": "5341",
+                    "hijos": [
+                        "7110",
+                        "7111",
+                        "7113"
+                    ]
+                },
+                "7091": {
+                    "id": "7091",
+                    "name": "Ema Stone",
+                    "padre": "5198",
+                    "madre": "4467",
+                    "hijos": [
+                        "7110",
+                        "7111",
+                        "7113"
+                    ]
+                },
+                "5865": {
+                    "id": "5865",
+                    "name": "Joseph",
+                    "padre": "0",
+                    "madre": "1",
+                    "hijos": [
+                        "7095",
+                        "7096"
+                    ]
+                },
+                "5341": {
+                    "id": "5341",
+                    "name": "Emmie",
+                    "padre": "0",
+                    "madre": "1",
+                    "hijos": [
+                        "7095",
+                        "7096"
+                    ]
+                },
+                "0": {
+                    "id": "0",
+                    "name": "Ad\u00e1n",
+                    "padre": null,
+                    "madre": null,
+                    "hijos": [
+                        "5865",
+                        "5341",
+                        "5198",
+                        "4467",
+                        "6573",
+                        "5047",
+                        "5134"
+                    ]
+                },
+                "1": {
+                    "id": "1",
+                    "name": "Eva",
+                    "padre": null,
+                    "madre": null,
+                    "hijos": [
+                        "5865",
+                        "5341",
+                        "5198",
+                        "4467",
+                        "6573",
+                        "5047",
+                        "5134"
+                    ]
+                },
+                "5198": {
+                    "id": "5198",
+                    "name": "Maxwell",
+                    "padre": "0",
+                    "madre": "1",
+                    "hijos": [
+                        "7091"
+                    ]
+                },
+                "4467": {
+                    "id": "4467",
+                    "name": "Sophia",
+                    "padre": "0",
+                    "madre": "1",
+                    "hijos": [
+                        "7091"
+                    ]
+                },
+                "7113": {
+                    "id": "7113",
+                    "name": "John Snow",
+                    "padre": "7095",
+                    "madre": "7091",
+                    "hijos": [
+                        "7116"
+                    ]
+                },
+                "7057": {
+                    "id": "7057",
+                    "name": "Fulanita",
+                    "padre": "7023",
+                    "madre": "6573",
+                    "hijos": [
+                        "7116"
+                    ]
+                },
+                "7023": {
+                    "id": "7023",
+                    "name": "Tugor",
+                    "padre": "5047",
+                    "madre": "5134",
+                    "hijos": [
+                        "7057"
+                    ]
+                },
+                "6573": {
+                    "id": "6573",
+                    "name": "Diana",
+                    "padre": "0",
+                    "madre": "1",
+                    "hijos": [
+                        "7057"
+                    ]
+                },
+                "5047": {
+                    "id": "5047",
+                    "name": "Justin",
+                    "padre": "0",
+                    "madre": "1",
+                    "hijos": [
+                        "7023"
+                    ]
+                },
+                "5134": {
+                    "id": "5134",
+                    "name": "Daniella",
+                    "padre": "0",
+                    "madre": "1",
+                    "hijos": [
+                        "7023"
+                    ]
+                },
+                "7096": {
+                    "id": "7096",
+                    "name": "Pejelagarto",
+                    "padre": "5865",
+                    "madre": "5341",
+                    "hijos": []
+                }
+            }
+        }
+    },
+    "partida de Tatiana": {
+        "jugador": {
+            "id": "7153",
+            "name": "Tatiana",
+            "gender": "Female",
+            "age": "0",
+            "marital_status": "Single",
+            "alive": "Alive",
+            "father": "7107",
+            "mother": "7090",
+            "house": "4135"
+        },
+        "Puntuacion": 0,
+        "Arbol": {
+            "personas": {
+                "7153": {
+                    "id": "7153",
+                    "name": "Tatiana",
+                    "padre": "7107",
+                    "madre": "7090",
+                    "hijos": []
+                },
+                "7107": {
+                    "id": "7107",
+                    "name": "Naranjo3",
+                    "padre": "7070",
+                    "madre": "7102",
+                    "hijos": [
+                        "7153"
+                    ]
+                },
+                "7090": {
+                    "id": "7090",
+                    "name": "Fernanflocita",
+                    "padre": "5198",
+                    "madre": "4467",
+                    "hijos": [
+                        "7153"
+                    ]
+                },
+                "7070": {
+                    "id": "7070",
+                    "name": "papayo",
+                    "padre": "6447",
+                    "madre": "7062",
+                    "hijos": [
+                        "7107"
+                    ]
+                },
+                "7102": {
+                    "id": "7102",
+                    "name": "Naranjita",
+                    "padre": "7096",
+                    "madre": "7097",
+                    "hijos": [
+                        "7107"
+                    ]
+                },
+                "6447": {
+                    "id": "6447",
+                    "name": "Marcus",
+                    "padre": "0",
+                    "madre": "1",
+                    "hijos": [
+                        "7070"
+                    ]
+                },
+                "7062": {
+                    "id": "7062",
+                    "name": "Anita",
+                    "padre": "7056",
+                    "madre": "6529",
+                    "hijos": [
+                        "7070"
+                    ]
+                },
+                "0": {
+                    "id": "0",
+                    "name": "Ad\u00e1n",
+                    "padre": null,
+                    "madre": null,
+                    "hijos": [
+                        "6447",
+                        "5047",
+                        "5134",
+                        "6573",
+                        "6529",
+                        "5865",
+                        "5341",
+                        "5198",
+                        "4467"
+                    ]
+                },
+                "1": {
+                    "id": "1",
+                    "name": "Eva",
+                    "padre": null,
+                    "madre": null,
+                    "hijos": [
+                        "6447",
+                        "5047",
+                        "5134",
+                        "6573",
+                        "6529",
+                        "5865",
+                        "5341",
+                        "5198",
+                        "4467"
+                    ]
+                },
+                "7056": {
+                    "id": "7056",
+                    "name": "Fabickens",
+                    "padre": "7023",
+                    "madre": "6573",
+                    "hijos": [
+                        "7062"
+                    ]
+                },
+                "6529": {
+                    "id": "6529",
+                    "name": "Blaire",
+                    "padre": "0",
+                    "madre": "1",
+                    "hijos": [
+                        "7062"
+                    ]
+                },
+                "7023": {
+                    "id": "7023",
+                    "name": "Tugor",
+                    "padre": "5047",
+                    "madre": "5134",
+                    "hijos": [
+                        "7056"
+                    ]
+                },
+                "6573": {
+                    "id": "6573",
+                    "name": "Diana",
+                    "padre": "0",
+                    "madre": "1",
+                    "hijos": [
+                        "7056"
+                    ]
+                },
+                "5047": {
+                    "id": "5047",
+                    "name": "Justin",
+                    "padre": "0",
+                    "madre": "1",
+                    "hijos": [
+                        "7023"
+                    ]
+                },
+                "5134": {
+                    "id": "5134",
+                    "name": "Daniella",
+                    "padre": "0",
+                    "madre": "1",
+                    "hijos": [
+                        "7023"
+                    ]
+                },
+                "7096": {
+                    "id": "7096",
+                    "name": "Pejelagarto",
+                    "padre": "5865",
+                    "madre": "5341",
+                    "hijos": [
+                        "7102"
+                    ]
+                },
+                "7097": {
+                    "id": "7097",
+                    "name": "Pejelagarto",
+                    "padre": "5865",
+                    "madre": "5341",
+                    "hijos": [
+                        "7102"
+                    ]
+                },
+                "5865": {
+                    "id": "5865",
+                    "name": "Joseph",
+                    "padre": "0",
+                    "madre": "1",
+                    "hijos": [
+                        "7096",
+                        "7097"
+                    ]
+                },
+                "5341": {
+                    "id": "5341",
+                    "name": "Emmie",
+                    "padre": "0",
+                    "madre": "1",
+                    "hijos": [
+                        "7096",
+                        "7097"
+                    ]
+                },
+                "5198": {
+                    "id": "5198",
+                    "name": "Maxwell",
+                    "padre": "0",
+                    "madre": "1",
+                    "hijos": [
+                        "7090"
+                    ]
+                },
+                "4467": {
+                    "id": "4467",
+                    "name": "Sophia",
+                    "padre": "0",
+                    "madre": "1",
+                    "hijos": [
+                        "7090"
+                    ]
+                }
+            }
         }
     }
 }
