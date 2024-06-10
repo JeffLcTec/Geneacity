@@ -3,7 +3,7 @@ from tkinter import messagebox, font
 import json
 from PIL import Image, ImageTk
 import sys
-import prueba
+import juego
 from arbol import *
  
 
@@ -57,7 +57,7 @@ def menu_inicio():
     }
 
     # Crear botones con estilo futurista
-    btn_nueva_partida = tk.Button(root, text="Partida nueva", **btn_style, command=lambda: prueba.nueva_partida(root))
+    btn_nueva_partida = tk.Button(root, text="Partida nueva", **btn_style, command=lambda: juego.nueva_partida(root))
     btn_cargar_partida = tk.Button(root, text="Cargar partida", **btn_style, command=lambda:cargar_partida(root))
     btn_ver_historial = tk.Button(root, text="Ver historial", **btn_style, command=lambda:cargar_historial())
 
@@ -76,9 +76,11 @@ def cargar_partida(ventana):
             partida = json.load(file)
         jugador=partida["partida actual"]["jugador"]
         puntos=partida["partida actual"]["Puntuacion"]
-        prueba.cargar_partida(jugador,puntos,ventana)
-    except Exception:
-        pass
+        arbol_dict=partida["partida actual"]["Arbol"]
+        arbol = ArbolGenealogico.de_dict(arbol_dict)
+        juego.cargar_partida(jugador,puntos,ventana,arbol)
+    except Exception as e:
+        print(e)
 
 def cargar_historial():
     """función encargada de leer el archivo json y determinar si hay partidas guardadas o no.
@@ -118,12 +120,13 @@ def mostrar_historial(partidas_guardadas):
             nombre_partida = lista_partidas.get(indice)
             partida_seleccionada = partidas_guardadas[nombre_partida]
             arbol_dict = partida_seleccionada['Arbol']
-        arbol = dict_a_arbol(arbol_dict)
+            puntos = partida_seleccionada['Puntuacion']
+        arbol = ArbolGenealogico.de_dict(arbol_dict)
         ventana = tk.Tk()
         screen_width = ventana.winfo_screenwidth()
         arbol.posiciones = arbol.calcular_posiciones(screen_width)
         ventana.destroy()
-        prueba.ver_familia(arbol,Ver=True)
+        juego.ver_familia(arbol,puntos,Ver=True)
 
     boton_cargar = tk.Button(ventana_partidas, text="ver puntuación", command=ver_historial)
     boton_cargar.pack(pady=10)
