@@ -7,10 +7,25 @@ from PIL import *
 import sys
 
 def nueva_partida(ventana_menu: tk.Tk):
+    """
+    Inicia una nueva partida y destruye la ventana del menú.
+
+    Args:
+        ventana_menu (tk.Tk): Ventana del menú principal.
+    """       
     ventana_menu.destroy()
     seleccionar_personaje()
 
 def cargar_partida(jugador, puntos, ventana_menu,arbol):
+    """
+    Carga una partida guardada.
+
+    Args:
+        jugador (dict): Datos del jugador.
+        puntos (int): Puntos actuales.
+        ventana_menu (tk.Tk): Ventana del menú principal.
+        arbol (ArbolGenealogico): Árbol genealógico del jugador.
+    """
     global puntaje_actual,three
     three=arbol
     ventana_menu.destroy()
@@ -19,10 +34,11 @@ def cargar_partida(jugador, puntos, ventana_menu,arbol):
 
 
 def seleccionar_personaje():
-    # Inicializa Pygame
+    """
+    Permite al jugador seleccionar un personaje disponible.
+    """
     pygame.init()
 
-    # Configuración de la ventana
     screen = pygame.display.set_mode((800, 800))
     pygame.display.set_caption("Geneacity")
 
@@ -32,8 +48,20 @@ def seleccionar_personaje():
 
     # Bucle principal del juego
     def personas_disponibles():
-        disponibles = geneacity_API_request("https://geneacity.life/API/getAvailableInhabitants/?x=10000&y=10000")
-        return disponibles.json
+        """Busca las personas disponibles en areas random del mapa
+
+        Returns:
+            json: personas disponibles
+        """
+        while True:
+            x= random.randrange(1000, 100000, 1000)
+            y= random.randrange(1000, 100000, 1000)
+            disponibles = geneacity_API_request(f"https://geneacity.life/API/getAvailableInhabitants/?x={x}&y={y}")
+            try:
+                if disponibles.json["error"]:
+                    pass
+            except:
+                return disponibles.json
 
     personajes_disponibles = personas_disponibles()
     personas = []
@@ -47,7 +75,6 @@ def seleccionar_personaje():
         if p["name"] not in personas:
             personas.append(p)
 
-    # Cargar imágenes y crear rectángulos una vez
     for e in personas:
         if e['gender']=='Male':
             img = random.choice(skins1)
@@ -56,16 +83,21 @@ def seleccionar_personaje():
         character_image = pygame.transform.scale(pygame.image.load(img).convert_alpha(), (100, 100))
         images.append(character_image)
         character_rect = character_image.get_rect(topleft=(ventana_x, ventana_y - 20))
-        rects.append((character_rect, e))  # Guardar rectángulo y nombre del personaje
+        rects.append((character_rect, e)) 
 
         ventana_x += 150
         if ventana_x > 650:
             ventana_x = 50
-            ventana_y += 150  # Incrementa más para dejar espacio para el texto
+            ventana_y += 150  
 
     def handle_character_click(jugador):
+        """inicia el juego con el personaje seleccionado
+
+        Args:
+            jugador (_type_): jugador
+        """
         estado= geneacity_API_request(f"https://geneacity.life/API/selectAvailableInhabitant/?id={jugador['id']}") 
-        game(jugador)# Aquí puedes llamar a la función que quieras para el personaje clickeado
+        game(jugador)
 
     while True:
         for event in pygame.event.get():
@@ -94,12 +126,26 @@ def seleccionar_personaje():
         pygame.display.flip()
 
 def buscar_parentezco(jugador,persona):
+    """
+    Busca el parentesco entre el jugador y otra persona.
+
+    Args:
+        jugador (dict): Datos del jugador.
+        persona (dict): Datos de la otra persona.
+    """
     arbol_j=three
     arbol_p= arbol_persona(persona)
     puntuacion= buscar_similitud(jugador,persona,arbol_j,arbol_p)
 
     return puntuacion
+
 def arbol_persona(persona):
+    """
+    Crea el árbol genealógico de una persona.
+
+    Args:
+        persona (dict): Datos de la persona.
+    """
     three_persona.agregar_nodo(Nodo(persona["id"],persona["name"]))
     if persona["father"] and persona["mother"]:
         padre=info_persona(info_persona(persona["id"])["father"])
@@ -112,7 +158,15 @@ def arbol_persona(persona):
     else:
         pass
     return three_persona
+
 def arbol_jugador(persona, three):
+    """
+    Crea o actualiza el árbol genealógico del jugador.
+
+    Args:
+        persona (dict): Datos del jugador.
+        three (ArbolGenealogico): Árbol genealógico del jugador.
+    """
     if persona["id"] not in three.personas:
         three.agregar_nodo(Nodo(persona["id"], persona["name"]))
 
@@ -146,6 +200,14 @@ def arbol_jugador(persona, three):
     return three
     
 def ver_familia(three,puntaje,Ver):
+    """
+    Muestra el árbol genealógico en una ventana.
+
+    Args:
+        three (ArbolGenealogico): Árbol genealógico del jugador.
+        puntaje (int): Puntaje actual del jugador.
+        Ver (bool): Indica si se debe mostrar el árbol genealógico.
+    """
     global screen_width
     if Ver==True:
         ventana = tk.Tk()
@@ -175,22 +237,32 @@ def imagen(contadores, imagen, direccion):
 
         imagen = pygame.image.load(sprites[direccion][contadores[direccion] - 1]).convert_alpha()
         return contadores[direccion], imagen
-def habitantest():
-    habitantes_totales= geneacity_API_request("https://geneacity.life/API/getAvailableInhabitants/?x=10000&y=10000")    
-    return habitantes_totales.json["inhabitants"]
+    
 def info_persona(id):
+    """
+    Obtiene la información de una persona.
 
+    Args:
+        id (int): Identificador de la persona.
+
+    Returns:
+        dict: Información de la persona.
+    """
     respuesta= geneacity_API_request(f"https://geneacity.life/API/getInhabitantInformation/?id={id}")   #funcion en proceso
     return respuesta.json['inhabitant']
+
 def Info_casas(lista,x,y):
-    """FUncion para realizar consultas al API de las personas de las casas
-    
+    """
+    Realiza consultas al API de las personas de las casas.
+
     Args:
-        lista (list): lista que almacena las casas.
-        x (int): posición x de la casa.
-        y (int): posición y de la casa.
-         
-           """
+        lista (list): Lista que almacena las casas.
+        x (int): Posición x de la casa.
+        y (int): Posición y de la casa.
+
+    Returns:
+        list: Lista de residentes de la casa.
+    """
     for casas in lista:
         for casa in casas['houses']:
             if int(casa['x'])==x and int(casa['y'])==y: #verifica si la x,y de cada casa es igual a la enviada
@@ -200,12 +272,30 @@ def Info_casas(lista,x,y):
                     return(lista_habitantes.json['residents'])
                 except KeyError:
                     return []
+                
 def matricidio(jugador, pareja):
+    """
+    Realiza la unión de dos habitantes.
+
+    Args:
+        jugador (dict): Datos del jugador.
+        pareja (dict): Datos de la pareja.
+    """
     x= random.randint(20,9500)
     y= random.randint(20,9500)
     geneacity_API_request(f"https://geneacity.life/API/createInhabitantUnion/?idInhabitant1={jugador["id"]}&idInhabitant2={pareja["id"]}&newHouseXPostition={x}&newHouseYPostition={y}")
     print(f"Felicidades, te has casado, tu nueva vivienda está en ({x},{y})")
+
 def reproduccion(jugador,nombre,root,three):
+        """
+    Genera un hijo para el jugador.
+
+    Args:
+        jugador (dict): Datos del jugador.
+        nombre (str): Nombre del hijo.
+        root (tk.Tk): Ventana principal.
+        three (ArbolGenealogico): Árbol genealógico del jugador.
+    """
         child = geneacity_API_request(f"https://geneacity.life/API/createChildren/?name={nombre}&idInhabitant={jugador["id"]}&gender=Male&age=20")
         child= child.json["childId"]["id"]
         print(f"Felicidades, acabas de tener un/una hijo/a bien bonito/a llamado {nombre}")
@@ -227,20 +317,20 @@ def request_casas(lista, jx, jy):
     Returns:
         list: lista actualizada de jsons.
     """
-    # Realizar la consulta al API
+    
     consulta = geneacity_API_request(f'https://geneacity.life/API/getHouses/?x={jx}&y={jy}')
     nuevo_json = consulta.json
     
-    # Extraer las coordenadas de las casas en la respuesta
+    
     nuevas_casas = {(casa['x'], casa['y']) for casa in nuevo_json.get('houses', [])}
 
-    # Evitar añadir duplicados verificando si las casas ya están en la lista
+    
     for casas_json in lista:
         casas_existentes = {(casa['x'], casa['y']) for casa in casas_json.get('houses', [])}
-        # Actualizar el conjunto de nuevas casas eliminando las que ya están presentes
+        
         nuevas_casas.difference_update(casas_existentes)
     
-    # Solo agregar nuevas casas si hay casas únicas en la respuesta actual
+    
     if nuevas_casas:
         lista.append(nuevo_json)
     
@@ -248,6 +338,12 @@ def request_casas(lista, jx, jy):
 
             
 def game(jugador):
+    """
+    Función principal del juego.
+
+    Args:
+        jugador (dict): Datos del jugador.
+    """
     global screen_width
     from PIL import Image
     from arbol import ArbolGenealogico,Nodo
@@ -267,7 +363,7 @@ def game(jugador):
         
         screen.fill([48, 126, 201])
 
-        # Dibuja solo los mosaicos visibles
+        
         pablito=0
         jaime=0
         for tile in tiles:
@@ -369,10 +465,12 @@ def game(jugador):
                                 persona_info_open=True
                 elif persona_info_open:
                     if arbol_p.collidepoint(event.pos):
+                        
                         retorno= buscar_parentezco(jugador,persona_seleccionada)
-                        puntaje_actual+=retorno[0]
+                        ventana_parentezco=True
                         parentezco=retorno[1]
-                        ventana_parentezco=True 
+                        if persona_seleccionada["id"] not in three.personas.keys():
+                            puntaje_actual+=retorno[0]
                         if retorno[2]==None:
                             pass
                         else:
@@ -417,10 +515,7 @@ def game(jugador):
             y-=speed        
             jugadory+=speed
             cont_casas+=1
-            """if cont_casas>=40:
-                cont_casas=0
-                jsons=request_casas(jsons, jugadorx, jugadory)       
-                jsons=request_casas(jsons, jugadorx, jugadory+800)"""
+            
             
             
         if not window_open and not persona_info_open:   
@@ -431,10 +526,7 @@ def game(jugador):
                 y+=speed
                 jugadory-=speed
                 cont_casas+=1
-                """ if cont_casas>=40:
-                    cont_casas=0
-                    jsons=request_casas(jsons, jugadorx, jugadory)       
-                    jsons=request_casas(jsons, jugadorx, jugadory-800)"""
+                
                 
             if keys[pygame.K_a] and lockA:       
                 lockS,lockD,lockW=False,False,False
@@ -443,10 +535,7 @@ def game(jugador):
                 x+=speed
                 jugadorx-=speed
                 cont_casas+=1
-                """if cont_casas>=40:
-                    cont_casas=0
-                    jsons=request_casas(jsons, jugadorx, jugadory)       
-                    jsons=request_casas(jsons, jugadorx-800, jugadory)"""
+                
                 
             if keys[pygame.K_d] and lockD:
                 lockA,lockS,lockW=False,False,False
@@ -455,10 +544,7 @@ def game(jugador):
                 x-=speed 
                 jugadorx+=speed
                 cont_casas+=1
-                """ if cont_casas>=40:
-                    cont_casas=0
-                    jsons=request_casas(jsons, jugadorx, jugadory)       
-                    jsons=request_casas(jsons, jugadorx+800, jugadory)"""
+                
 
         if window_open: #verifica si se toco una casa, esta variable se pone en true
             speed=0    
@@ -499,7 +585,7 @@ def game(jugador):
             pygame.draw.rect(screen,  (94, 76, 72), arbol_p)
             text = font.render("Ver Similitud", True, (255,255,255))
             screen.blit(text,(325,513))
-            if persona_seleccionada["marital_status"]=="Single" and jugador["marital_status"]=="Single" and not persona_seleccionada["gender"]==jugador["gender"] and not jugador["id"]==persona_seleccionada["id"] and int(jugador["age"])>25 and int(persona_seleccionada["age"])>25:
+            if persona_seleccionada["marital_status"]=="Single" and jugador["marital_status"]=="Single" and not persona_seleccionada["gender"]==jugador["gender"] and not jugador["id"]==persona_seleccionada["id"] and int(jugador["age"])>18 and int(persona_seleccionada["age"])>18 and int(jugador["age"])<45 and int(persona_seleccionada["age"])<45:
                 casarse = pygame.Rect(300, 570, 200, 50)
                 pygame.draw.rect(screen, (94, 76, 72), casarse)
                 text = font.render("Casarse", True, (255,255,255))
@@ -572,7 +658,7 @@ def game(jugador):
         screen.blit(text,(390,0))        
         if not window_open:
             speed=25
-        if tiempo==700:
+        if tiempo==700 or tiempo==0:
             tiempo=0
             jugador=info_persona(jugador["id"])
             while current_frame<frame_count:

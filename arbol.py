@@ -3,6 +3,12 @@ import tkinter as tk
 
 class Nodo:
     def __init__(self, id, name):
+        """
+        Inicializa un nodo con un identificador y un nombre.
+
+        :param id: Identificador único del nodo.
+        :param name: Nombre del nodo.
+        """
         self.id = id
         self.name = name
         self.padre = None
@@ -10,9 +16,16 @@ class Nodo:
         self.hijos = []
 
     def __str__(self) -> str:
+        
         return f"({self.id}, {self.name})"
 
     def a_dict(self):
+        """
+        Convierte el nodo a un diccionario.
+
+        return: 
+            Diccionario con la información del nodo.
+        """
         return {
             'id': self.id,
             'name': self.name,
@@ -23,6 +36,12 @@ class Nodo:
 
     @staticmethod
     def de_dict(diccionario):
+        """
+        Crea un nodo a partir de un diccionario.
+
+        :param diccionario: Diccionario con la información del nodo.
+        :return: Nodo creado a partir del diccionario.
+        """
         persona = Nodo(diccionario['id'], diccionario['name'])
         # No establecemos padre, madre o hijos aún, porque pueden no haber sido creados.
         return persona
@@ -34,22 +53,44 @@ class ArbolGenealogico:
         self.memo = {}
 
     def agregar_nodo(self, nodo):
+        """
+        Agrega un nodo al árbol.
+
+        :param nodo: Nodo a agregar.
+        """
         if nodo.id not in self.personas:
             self.personas[nodo.id] = nodo
 
     def establecer_padre(self, id_nodo, id_padre):
+        """
+        Establece el padre de un nodo.
+
+        :param id_nodo: Identificador del nodo hijo.
+        :param id_padre: Identificador del nodo padre.
+        """
         if id_nodo in self.personas and id_padre in self.personas:
             if not any(hijo.id == id_nodo for hijo in self.personas[id_padre].hijos):
                 self.personas[id_nodo].padre = self.personas[id_padre]
                 self.personas[id_padre].hijos.append(self.personas[id_nodo])
 
     def establecer_madre(self, id_nodo, id_madre):
+        """
+        Establece la madre de un nodo.
+
+        :param id_nodo: Identificador del nodo hijo.
+        :param id_madre: Identificador del nodo madre.
+        """
         if id_nodo in self.personas and id_madre in self.personas:
             if not any(hijo.id == id_nodo for hijo in self.personas[id_madre].hijos):
                 self.personas[id_nodo].madre = self.personas[id_madre]
                 self.personas[id_madre].hijos.append(self.personas[id_nodo])
 
     def a_dict(self):
+        """
+        Convierte el árbol genealógico a un diccionario.
+
+        :return: Diccionario con la información del árbol.
+        """
         return {
             'personas': {id: persona.a_dict() for id, persona in self.personas.items()}
         }
@@ -70,6 +111,13 @@ class ArbolGenealogico:
         return arbol
 
     def calcular_posicion_nueva_persona(self, id_padre, id_madre):
+        """
+        Calcula la posición de una nueva persona en el árbol.
+
+        :param id_padre: Identificador del padre.
+        :param id_madre: Identificador de la madre.
+        :return: Tupla con la posición (x, y) de la nueva persona.
+        """
         if id_padre in self.posiciones and id_madre in self.posiciones:
             x_padre, y_padre = self.posiciones[id_padre]
             x_madre, y_madre = self.posiciones[id_madre]
@@ -85,6 +133,12 @@ class ArbolGenealogico:
         return None
 
     def calcular_posiciones(self,screen):
+        """
+        Calcula las posiciones de todos los nodos en el árbol.
+
+        :param screen: Ancho de la pantalla para centrar los nodos.
+        :return: Diccionario con las posiciones de cada nodo.
+        """
         posiciones = {}
         y_step = 50
         x_center = screen//2
@@ -99,11 +153,24 @@ class ArbolGenealogico:
             posiciones[padres[1].id] = (x_center + x_gap // 2, y_start)
 
         def contar_descendientes(nodo):
+            """cuenta cuantos hijos tiene un nodo
+
+    
+            Returns:
+                descendientes
+            """
             if not nodo.hijos:
                 return 1
             return sum(contar_descendientes(hijo) for hijo in nodo.hijos)
 
         def posicionar_hijos(nodo, x, y):
+            """Establece las posiciones de los hijos
+
+            Args:
+                nodo (_type_): padre
+                x (_type_): x
+                y (_type_): y
+            """
             hijos = nodo.hijos
             num_hijos = len(hijos)
             if num_hijos > 0:
@@ -135,10 +202,22 @@ class ArbolGenealogico:
 
 
     def dibujar_arbol(self, canvas):
+        """
+        Dibuja el árbol genealógico en un canvas.
+
+        :param canvas: Canvas de tkinter donde se dibujará el árbol.
+        """
         for id_nodo, pos in self.posiciones.items():
             self.dibujar_nodo(canvas, id_nodo, pos)
 
     def dibujar_nodo(self, canvas, id_nodo, pos):
+        """
+        Dibuja un nodo en el canvas.
+
+        :param canvas: Canvas de tkinter donde se dibujará el nodo.
+        :param id_nodo: Identificador del nodo a dibujar.
+        :param pos: Posición (x, y) donde se dibujará el nodo.
+        """
         nodo = self.personas[id_nodo]
         x, y = pos
         canvas.create_oval(x-20, y-20, x+20, y+20, fill='white')
@@ -151,11 +230,23 @@ class ArbolGenealogico:
             canvas.create_line(x, y-20, x_madre, y_madre+20)
 
     def obtener_ancestros(self, id_persona):
+        """
+        Obtiene todos los ancestros de una persona.
+
+        :param id_persona: Identificador de la persona.
+        :return: Conjunto de ancestros.
+        """
         ancestros = set()
         self._obtener_ancestros_recursivo(self.personas[id_persona], ancestros)
         return ancestros
 
     def _obtener_ancestros_recursivo(self, persona, ancestros):
+        """
+        Método recursivo para obtener ancestros de una persona.
+
+        :param persona: Persona actual.
+        :param ancestros: Conjunto de ancestros.
+        """
         if persona is None:
             return
         ancestros.add((persona.id, persona.name))
@@ -163,12 +254,24 @@ class ArbolGenealogico:
         self._obtener_ancestros_recursivo(persona.madre, ancestros)
 
     def obtener_ancestros_con_distancia(self, id_persona):
+        """
+        Obtiene todos los ancestros de una persona junto con su distancia.
+
+        :param id_persona: Identificador de la persona.
+        :return: Diccionario de ancestros con su distancia.
+        """
         ancestros = {}
         self._obtener_ancestros_recursivo(self.personas[id_persona], ancestros, 0)
         return ancestros
 
     def _obtener_ancestros_recursivo(self, persona, ancestros, distancia):
-        
+        """
+        Método recursivo para obtener ancestros de una persona junto con su distancia.
+
+        :param persona: Persona actual.
+        :param ancestros: Diccionario de ancestros con su distancia.
+        :param distancia: Distancia actual.
+        """
         if persona is None:
             return
         if persona.id in ancestros:
@@ -179,6 +282,13 @@ class ArbolGenealogico:
         self._obtener_ancestros_recursivo(persona.madre, ancestros, distancia + 1)
 
 def nodo_a_dict(nodo, visitados):
+    """
+    Convierte un nodo a un diccionario.
+
+    :param nodo: Nodo a convertir.
+    :param visitados: Conjunto de nodos ya visitados.
+    :return: Diccionario con la información del nodo.
+    """
     if not nodo or nodo.id in visitados:
         return None
 
@@ -193,10 +303,23 @@ def nodo_a_dict(nodo, visitados):
     }
 
 def arbol_a_dict(arbol):
+    """
+    Convierte un árbol genealógico a un diccionario.
+
+    :param arbol: Árbol genealógico a convertir.
+    :return: Diccionario con la información del árbol.
+    """
     visitados = set()
     return {id: nodo_a_dict(nodo, visitados) for id, nodo in arbol.personas.items()}
 
 def dict_a_nodo(nodo_dict, nodos):
+    """
+    Crea un nodo a partir de un diccionario.
+
+    :param nodo_dict: Diccionario con la información del nodo.
+    :param nodos: Diccionario de nodos ya creados.
+    :return: Nodo creado a partir del diccionario.
+    """
     if not nodo_dict:
         return None
 
@@ -221,6 +344,12 @@ def dict_a_nodo(nodo_dict, nodos):
     return nodo
 
 def dict_a_arbol(arbol_dict):
+    """
+    Crea un árbol genealógico a partir de un diccionario.
+
+    :param arbol_dict: Diccionario con la información del árbol.
+    :return: Árbol genealógico creado a partir del diccionario.
+    """
     arbol = ArbolGenealogico()
     nodos = {}
 
@@ -231,6 +360,13 @@ def dict_a_arbol(arbol_dict):
     return arbol
 
 def determinar_vinculo(relacion_jugador, relacion_persona):
+    """
+    Determina el vínculo entre dos personas basado en su relación.
+
+    :param relacion_jugador: Relación del jugador.
+    :param relacion_persona: Relación de la otra persona.
+    :return: Vínculo determinado.
+    """
     if relacion_jugador == "Ego" and relacion_persona == "Ego":
         return "Misma persona"
     if relacion_jugador == "Padre/Madre" and relacion_persona == "Ego":
@@ -299,6 +435,15 @@ def determinar_vinculo(relacion_jugador, relacion_persona):
 
 
 def buscar_similitud(jugador, persona, arbol1, arbol2):
+    """
+    Busca la similitud entre dos personas en dos árboles genealógicos.
+
+    :param jugador: Diccionario con la información del jugador.
+    :param persona: Diccionario con la información de la otra persona.
+    :param arbol1: Primer árbol genealógico.
+    :param arbol2: Segundo árbol genealógico.
+    :return: Tupla con el puntaje, la relación y el nodo de la persona.
+    """
     puntaje_actual = 0
     ancestros_jugador = arbol1.obtener_ancestros_con_distancia(jugador["id"])
     ancestros_persona = arbol2.obtener_ancestros_con_distancia(persona["id"])
@@ -380,7 +525,10 @@ def buscar_similitud(jugador, persona, arbol1, arbol2):
         print(f"Eres el {vinculo_jugador} de esta persona!!")
         print(f"Esta persona es tu {vinculo_persona}!!")
         print(puntaje_actual)
-        tupla = (puntaje_actual, f"Es tu {vinculo_persona}",arbol2.personas[persona["id"]])
+        if vinculo_persona=="Relacionnlejana":
+            tupla = (puntaje_actual, f"tiene una {vinculo_persona}",arbol2.personas[persona["id"]])
+        else:
+            tupla = (puntaje_actual, f"Es tu {vinculo_persona}",arbol2.personas[persona["id"]])
     else:
         print("No se encontraron ancestros comunes.")
         tupla = (puntaje_actual, "No tiene ningun vinculo o se desconoce.",None)

@@ -74,3 +74,5 @@ frame_count = len(frames)
 frame_actual = 0
 animation_speed = 0.07
 current_frame = 0
+
+familiares_encontrados=[]
